@@ -1,17 +1,15 @@
-import { Globe } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+"use client";
 
-function Footer(isSticky = true) {
+import { usePathname } from "next/navigation";
+
+function Footer() {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+
   return (
     <footer
-      className={`h-16 text-xs sm:text-sm text-zinc-600 border-t border-zinc-800/50 ${
-        isSticky ? "flex-none" : ""
+      className={`h-16 text-xs sm:text-sm bg-zinc-950/20 border-t border-zinc-800/50 flex-none z-10 backdrop-blur-sm ${
+        isHomePage ? "absolute bottom-0 w-full bg-transparent" : ""
       }`}
     >
       <div className="h-full max-w-7xl mx-auto px-4">

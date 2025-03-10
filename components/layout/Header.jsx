@@ -77,7 +77,7 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800/50 z-50">
+    <header className="fixed top-0 left-0 right-0 h-16 bg-zinc-950/20 backdrop-blur-sm border-b border-zinc-800/50 z-50">
       <div className="h-full flex justify-between items-center max-w-7xl mx-auto px-4">
         <Link href="/" className="flex items-center space-x-1">
           <span
