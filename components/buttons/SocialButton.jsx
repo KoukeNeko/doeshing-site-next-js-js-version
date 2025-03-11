@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 
 const SocialButton = ({ icon: Icon, href, isMobile, onHoverChange }) => {
@@ -10,7 +8,11 @@ const SocialButton = ({ icon: Icon, href, isMobile, onHoverChange }) => {
           className={`
           ${
             isMobile ? "px-5 py-3 w-14 h-14 shadow-lg rounded-r-none" : "mb-4"
-          } cursor-pointer flex items-center justify-center hover:scale-3d hover:scale-125 hover:shadow-[0_0_15px_rgba(255,255,255,0.7)] transition-all duration-300 ease-in-out transform-gpu origin-center
+          } cursor-pointer flex items-center justify-center hover:shadow-[0_0_15px_rgba(255,255,255,0.7)] transition-all duration-300 ease-in-out transform-gpu ${
+            isMobile
+              ? "hover:scale-125 origin-right"
+              : "hover:scale-125 origin-center"
+          }
         `}
           target="_blank"
           onMouseEnter={() => onHoverChange(true)}
