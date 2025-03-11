@@ -13,78 +13,42 @@ export default function Home() {
   const [isGithubHovered, setIsGithubHovered] = useState(false);
 
   return (
-    <div className="w-screen h-screen relative">
+    <div className="w-screen h-screen relative flex">
       {/* Card Animation - Full Screen (Left) */}
-      <CardAnimationDesktop />
+      <div className="z-30 absolute top-0 left-0 w-full h-full">
+        <CardAnimationDesktop />
+      </div>
 
       {/* Social Buttons - Floating on right side */}
-      <div className="flex flex-col w-full items-center">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-zinc-300 mb-2">
-            <TypewriterText
-              text="Welcome to my personal website!"
-              typingDelay={50}
-              randomVariation={30}
-              delay={400}
-            />
-          </h1>
-          <h2 className="text-2xl text-zinc-400">
-            <TypewriterText
-              text="Hi there, this is De-Sheng Chen!"
-              typingDelay={50}
-              randomVariation={30}
-              delay={600}
-            />
-          </h2>
+      <div className="absolute top-1/2 right-44 flex flex-col items-center justify-center bg-amber-900 z-10">
+        <div className="flex flex-col space-y-4 mb-8">
+          <TypewriterText
+            text="Hello, I'm Kevin Kang"
+            className="text-3xl font-bold"
+          />
+          <TypewriterText
+            text="I'm a software engineer"
+            className="text-3xl font-bold"
+          />
         </div>
+
         <div className="flex space-x-6">
-          <a
-            href="https://github.com/KoukeNeko"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Button
+            className="mb-4"
+            href="https://www.linkedin.com/in/kevin-kang-1a0b1b1b4/"
+            onMouseEnter={() => setIsLinkedinHovered(true)}
+            onMouseLeave={() => setIsLinkedinHovered(false)}
           >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-zinc-400"
-              onMouseEnter={() => setIsGithubHovered(true)}
-              onMouseLeave={() => setIsGithubHovered(false)}
-            >
-              <Github
-                size={20}
-                fill={isGithubHovered ? "currentColor" : "none"}
-              />
-            </Button>
-          </a>
-
-          <a
-            href="mailto:contact@doeshing.ink"
-            target="_blank"
-            rel="noopener noreferrer"
+            <LinkedinIcon size={24} />
+          </Button>
+          <Button
+            className="mb-4"
+            href="/resume.pdf"
+            onMouseEnter={() => setIsResumeHovered(true)}
+            onMouseLeave={() => setIsResumeHovered(false)}
           >
-            <Button variant="ghost" size="icon" className="text-zinc-400">
-              <Mail size={20} />
-            </Button>
-          </a>
-
-          <a
-            href="https://www.cake.me/me/doeshing"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-zinc-400 hover:bg-green-600"
-              onMouseEnter={() => setIsResumeHovered(true)}
-              onMouseLeave={() => setIsResumeHovered(false)}
-            >
-              <FileUser
-                size={20}
-                fill={isResumeHovered ? "currentColor" : "none"}
-              />
-            </Button>
-          </a>
+            <FileUser size={24} />
+          </Button>
         </div>
       </div>
     </div>
