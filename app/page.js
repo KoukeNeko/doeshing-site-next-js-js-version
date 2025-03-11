@@ -42,7 +42,7 @@ export default function Home() {
     },
     {
       icon: Github,
-      href: "",
+      href: "https://github.com/KoukeNeko",
       setHovered: setIsGithubHovered
     },
     {
