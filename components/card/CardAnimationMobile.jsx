@@ -23,7 +23,7 @@ useGLTF.preload(
   "https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/untitled.glb"
 );
 useTexture.preload(
-  "https://media.discordapp.net/attachments/1072368013581492304/1348582286378930266/band-SITCON.jpg?ex=67cffca0&is=67ceab20&hm=2189c8bd6b2faf4f9d669fcd59e80cd71c443a36d3bc8f30085eef61c5ffb675&=&format=webp"
+  "https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/band-SITCON.jpeg"
 );
 
 export default function CardAnimationMobile() {
@@ -88,7 +88,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     "https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/untitled.glb"
   );
   const texture = useTexture(
-    "https://media.discordapp.net/attachments/1072368013581492304/1348582286378930266/band-SITCON.jpg?ex=67cffca0&is=67ceab20&hm=2189c8bd6b2faf4f9d669fcd59e80cd71c443a36d3bc8f30085eef61c5ffb675&=&format=webp"
+    "https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/band-SITCON.jpeg"
   );
   const { width, height } = useThree((state) => state.size);
   const [curve] = useState(
