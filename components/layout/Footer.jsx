@@ -12,23 +12,20 @@ function Footer() {
         isHomePage ? "absolute bottom-0 w-full bg-transparent" : ""
       }`}
     >
-      <div className="h-full max-w-7xl mx-auto px-4">
-        <div className="h-full flex justify-between items-center">
-          {/* Left side content */}
-          <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-            <div className="flex items-center gap-2">
-              <span>Copyright {new Date().getFullYear()}</span>
-              <span className="hidden sm:inline">|</span>
-              <span>Inspired by Hello Friend NG</span>
-              <span className="hidden sm:inline">|</span>
-            </div>
+      <div className="h-full max-w-7xl mx-auto px-4 flex sm:justify-between justify-center items-center">
+        {/* Left side content */}
+        <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-2">
+            <span>Copyright {new Date().getFullYear()}</span>
+            <span className="hidden sm:inline">|</span>
+            <span>Inspired by Hello Friend NG</span>
+            <span className="hidden sm:inline">|</span>
+          </div>
 
-            <div className="flex items-center">
-              <span className="whitespace-nowrap">
-                Made with <span className="text-red-500 mx-1">♥</span> by
-                doeshing
-              </span>
-            </div>
+          <div className="flex items-center">
+            <span className="whitespace-nowrap">
+              Made with <span className="text-red-500 mx-1">♥</span> by doeshing
+            </span>
           </div>
         </div>
       </div>
