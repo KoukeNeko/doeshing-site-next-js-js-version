@@ -4,18 +4,20 @@ import { Button } from "@/components/ui/button";
 
 const SocialButton = ({ icon: Icon, href, isMobile, onHoverChange }) => {
   return (
-    <Button
-      className={`
+    <a href={href}>
+      <Button
+        className={`
         ${
           isMobile ? "px-5 py-3 w-14 h-14 shadow-lg rounded-r-none" : "mb-4"
         } cursor-pointer flex items-center justify-center
       `}
-      href={href}
-      onMouseEnter={() => onHoverChange(true)}
-      onMouseLeave={() => onHoverChange(false)}
-    >
-      <Icon size={isMobile ? 30 : 24} className="text-white" />
-    </Button>
+        target="_blank"
+        onMouseEnter={() => onHoverChange(true)}
+        onMouseLeave={() => onHoverChange(false)}
+      >
+        <Icon size={isMobile ? 30 : 24} className="text-white" />
+      </Button>
+    </a>
   );
 };
 
