@@ -205,7 +205,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   return (
     <>
       {/* 包含所有物理節點與卡片的群組，這裡位置 [0,4,0] 為大致的初始位置 */}
-      <group position={[-1, 4, 0]}>
+      <group position={[-1, 4.5, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
