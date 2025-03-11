@@ -72,7 +72,11 @@ export default function Home() {
               className="text-3xl font-bold"
             />
             <TypewriterText
-              text="I'm a software engineer"
+              text="I'm a student who"
+              className="text-3xl font-bold"
+            />
+            <TypewriterText
+              text="studying CS at CCU."
               className="text-3xl font-bold"
             />
           </div>
