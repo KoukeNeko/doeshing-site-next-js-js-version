@@ -53,7 +53,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="w-screen h-screen relative flex">
+    <div className="w-screen h-dvh relative flex">
       {/* Card Animation - Full Screen */}
       <div className="z-0 absolute top-0 left-0 w-full h-full">
         <CardComponent />
