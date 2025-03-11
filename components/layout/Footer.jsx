@@ -16,9 +16,9 @@ function Footer() {
         {/* Left side content */}
         <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
           <div className="flex items-center gap-2">
-            <span>Copyright {new Date().getFullYear()}</span>
-            <span className="hidden sm:inline">|</span>
-            <span>Inspired by Hello Friend NG</span>
+            <span>
+              Copyright {new Date().getFullYear()} All rights reserved.
+            </span>
             <span className="hidden sm:inline">|</span>
           </div>
 
