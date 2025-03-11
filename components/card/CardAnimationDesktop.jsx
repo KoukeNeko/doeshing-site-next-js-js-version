@@ -31,14 +31,14 @@ useTexture.preload(
 
 export default function App() {
   // 利用 leva 控制 debug 模式（可調整物理 debug 視覺化）
-  const { debug } = useControls({ debug: false });
+  // const { debug } = useControls({ debug: false });
   return (
     <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
       {/* 環境光 */}
       <ambientLight intensity={Math.PI} />
       {/* Physics 提供物理模擬環境 */}
       <Physics
-        debug={debug}
+        debug={false}
         interpolate
         gravity={[0, -40, 0]}
         timeStep={1 / 60}

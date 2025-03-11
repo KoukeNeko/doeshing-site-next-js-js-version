@@ -27,12 +27,12 @@ useTexture.preload(
 );
 
 export default function CardAnimationMobile() {
-  const { debug } = useControls({ debug: false });
+  // const { debug } = useControls({ debug: false });
   return (
     <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
       <ambientLight intensity={Math.PI} />
       <Physics
-        debug={debug}
+        debug={false}
         interpolate
         gravity={[0, -40, 0]}
         timeStep={1 / 60}
@@ -161,7 +161,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   return (
     <>
-      <group position={[0, 4.5, 0]}>
+      <group position={[0, 4.25, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
