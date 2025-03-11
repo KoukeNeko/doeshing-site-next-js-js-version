@@ -1,7 +1,12 @@
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import { Canvas, extend, useThree, useFrame } from "@react-three/fiber";
-import { useGLTF, useTexture, Environment, Lightformer } from "@react-three/drei";
+import {
+  useGLTF,
+  useTexture,
+  Environment,
+  Lightformer,
+} from "@react-three/drei";
 import {
   BallCollider,
   CuboidCollider,
@@ -17,7 +22,9 @@ import { useControls } from "leva";
 extend({ MeshLineGeometry, MeshLineMaterial });
 
 // 預先載入模型與貼圖
-useGLTF.preload("https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/untitled.glb");
+useGLTF.preload(
+  "https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/untitled.glb"
+);
 useTexture.preload(
   "https://media.discordapp.net/attachments/1072368013581492304/1348582286378930266/band-SITCON.jpg?ex=67cffca0&is=67ceab20&hm=2189c8bd6b2faf4f9d669fcd59e80cd71c443a36d3bc8f30085eef61c5ffb675&=&format=webp"
 );
@@ -30,7 +37,12 @@ export default function App() {
       {/* 環境光 */}
       <ambientLight intensity={Math.PI} />
       {/* Physics 提供物理模擬環境 */}
-      <Physics debug={debug} interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
+      <Physics
+        debug={debug}
+        interpolate
+        gravity={[0, -40, 0]}
+        timeStep={1 / 60}
+      >
         <Band />
       </Physics>
       {/* 獨立的背景環境，不受物理模擬影響 */}
@@ -121,7 +133,10 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
-  useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.45, 0]]);
+  useSphericalJoint(j3, card, [
+    [0, 0, 0],
+    [0, 1.45, 0],
+  ]);
 
   // 當滑鼠懸停時改變游標
   useEffect(() => {
@@ -153,7 +168,9 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       // 修正 j1 與 j2 的位移，減少過度拉伸造成的抖動
       [j1, j2].forEach((ref) => {
         if (!ref.current.lerped)
-          ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
+          ref.current.lerped = new THREE.Vector3().copy(
+            ref.current.translation()
+          );
         const clampedDistance = Math.max(
           0.1,
           Math.min(1, ref.current.lerped.distanceTo(ref.current.translation()))
@@ -188,7 +205,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   return (
     <>
       {/* 包含所有物理節點與卡片的群組，這裡位置 [0,4,0] 為大致的初始位置 */}
-      <group position={[-2, 4, 0]}>
+      <group position={[-1, 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
           <BallCollider args={[0.1]} />
@@ -215,7 +232,11 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             onPointerDown={(e) => {
               e.target.setPointerCapture(e.pointerId);
               // 計算拖曳起始偏移量
-              drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())));
+              drag(
+                new THREE.Vector3()
+                  .copy(e.point)
+                  .sub(vec.copy(card.current.translation()))
+              );
             }}
             onPointerUp={(e) => {
               e.target.releasePointerCapture(e.pointerId);
@@ -233,7 +254,11 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                 metalness={0.5}
               />
             </mesh>
-            <mesh geometry={nodes.clip.geometry} material={materials.metal} material-roughness={0.3} />
+            <mesh
+              geometry={nodes.clip.geometry}
+              material={materials.metal}
+              material-roughness={0.3}
+            />
             <mesh geometry={nodes.clamp.geometry} material={materials.metal} />
           </group>
         </RigidBody>
