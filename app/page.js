@@ -67,8 +67,8 @@ export default function Home() {
         
         {!isMobile && (
           <div className="flex flex-col space-y-4 mb-8 transition-opacity duration-1000">
-            <div className="text-3xl font-bold">Hello, I'm 陳德生</div>
-            <div className="text-3xl font-bold">I'm a student who</div>
+            <div className="text-3xl font-bold">Hello, I&rsquo;m 陳德生</div>
+            <div className="text-3xl font-bold">I&rsquo;m a student who</div>
             <div className="text-3xl font-bold">studying CS at CCU.</div>
           </div>
         )}
