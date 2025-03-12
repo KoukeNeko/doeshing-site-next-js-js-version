@@ -10,6 +10,7 @@ export default function BgBall() {
   useEffect(() => {
     // 建立一個容器作為固定背景
     const container = document.createElement("div");
+    container.id = "bg-ball-container";     // 定義容器 ID
     container.style.position = "fixed";     // 固定位置
     container.style.top = "0";              // 從頂部開始
     container.style.left = "0";             // 從左側開始
