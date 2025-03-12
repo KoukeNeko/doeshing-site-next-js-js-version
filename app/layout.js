@@ -4,6 +4,8 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Inter } from 'next/font/google';
 
+import BgBall from '@/components/effect/bg_ball';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,6 +34,7 @@ export default function RootLayout({ children }) {
         </main>
         <Footer />
       </body>
+      <BgBall />
     </html>
   );
 }

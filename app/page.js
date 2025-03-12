@@ -64,21 +64,12 @@ export default function Home() {
         className={`absolute ${isMobile ? "top-1/2 right-0" : "top-1/2 right-1/3"} z-10`}
         style={isMobile ? { transform: "translateY(-50%)" } : { transform: "translate(50%, -50%)" }}
       >
-        {/* Desktop Typewriter Text */}
+        
         {!isMobile && (
-          <div className="flex flex-col space-y-4 mb-8">
-            <TypewriterText
-              text="Hello, I'm 陳德生"
-              className="text-3xl font-bold"
-            />
-            <TypewriterText
-              text="I'm a student who"
-              className="text-3xl font-bold"
-            />
-            <TypewriterText
-              text="studying CS at CCU."
-              className="text-3xl font-bold"
-            />
+          <div className={`flex flex-col space-y-4 mb-8 transition-opacity duration-1000`}>
+            <div className="text-3xl font-bold">Hello, I'm 陳德生</div>
+            <div className="text-3xl font-bold">I'm a student who</div>
+            <div className="text-3xl font-bold">studying CS at CCU.</div>
           </div>
         )}
 
