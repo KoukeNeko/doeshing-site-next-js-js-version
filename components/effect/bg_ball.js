@@ -4,6 +4,7 @@ import { useEffect } from "react";
 /**
  * BgBall 元件 - 創建一個浮動彩色球體的背景動畫效果
  * 使用 Web Animations API 產生隨機移動的球體
+ * 背景加上左上角小區域的白色漸層
  * 回傳 null，因為這僅是一個 Side Effect 元件，不直接渲染任何視覺內容
  */
 export default function BgBall() {
@@ -19,6 +20,10 @@ export default function BgBall() {
     container.style.overflow = "hidden";    // 隱藏超出容器的內容
     container.style.zIndex = "-1";          // 確保在背景層級
     container.style.pointerEvents = "none"; // 允許點擊穿透背景
+    
+    // 添加小區域白色漸層，只在左上角
+    container.style.background = "radial-gradient(circle at top left, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 40%)";
+    
     document.body.appendChild(container);   // 將容器新增到 body 中
 
     // 定義球體的顏色選項
