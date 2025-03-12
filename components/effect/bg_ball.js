@@ -4,7 +4,7 @@ import { useEffect } from "react";
 /**
  * BgBall 元件 - 創建一個浮動彩色球體的背景動畫效果
  * 使用 Web Animations API 產生隨機移動的球體
- * 背景加上左上角小區域的白色漸層
+ * 球體會與左上角的微妙漸層光源產生互動
  * 回傳 null，因為這僅是一個 Side Effect 元件，不直接渲染任何視覺內容
  */
 export default function BgBall() {
@@ -21,7 +21,7 @@ export default function BgBall() {
     container.style.zIndex = "-1";          // 確保在背景層級
     container.style.pointerEvents = "none"; // 允許點擊穿透背景
     
-    // 添加小區域白色漸層，只在左上角
+    // 添加微妙的白色漸層，只在左上角
     container.style.background = "radial-gradient(circle at top left, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 40%)";
     
     document.body.appendChild(container);   // 將容器新增到 body 中
@@ -42,6 +42,15 @@ export default function BgBall() {
       ball.style.transform = `scale(${Math.random()})`;         // 隨機縮放
       ball.style.width = `${Math.random()}em`;                  // 隨機寬度
       ball.style.height = ball.style.width;                     // 等比例高度
+      
+      // 添加混合模式，使球體在光源處變亮
+      ball.style.mixBlendMode = "screen";   // 使用 screen 混合模式使球體在接近光源時變亮
+      
+      // 添加圓角使球體更圓滑
+      ball.style.borderRadius = "50%";
+      
+      // 稍微添加一些透明度
+      ball.style.opacity = "0.8";
 
       balls.push(ball);                     // 將球體加入陣列
       container.appendChild(ball);          // 將球體添加到容器
@@ -71,7 +80,7 @@ export default function BgBall() {
       );
     });
 
-    // 當元件卸載時清理容器
+    // 當元件unload時清理容器
     return () => {
       container.remove(); // 從 DOM 中移除容器
     };
