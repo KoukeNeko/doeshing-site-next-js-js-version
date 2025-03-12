@@ -27,7 +27,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" style={{
-      backgroundColor: "oklch(0.141 0.005 285.823) = #09090b"
+      backgroundColor: "#09090b"
     }}>
       <body className={`${inter.className} ${geistSans.variable} ${geistMono.variable} min-h-dvh flex flex-col bg-zinc-950 text-zinc-200 antialiased`}>
         <Header />
