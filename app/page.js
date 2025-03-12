@@ -34,14 +34,14 @@ export default function Home() {
 
   return (
     <div className="w-screen h-dvh relative flex justify-center">
-      {/* 卡片背景，設置為最大寬度，但確保可以溢出容器 */}
+      {/* 卡片背景，設定為最大寬度，但確保可以溢出容器 */}
       <div className="absolute z-0 top-0 left-0 w-screen h-full overflow-visible pointer-events-auto">
         <CardComponent />
       </div>
 
-      {/* 文字和按鈕內容，使用 pointer-events-none 確保點擊事件透過到卡片 */}
+      {/* 文字和按鈕內容，使用 pointer-events-none 確保點選事件透過到卡片 */}
       <div className="z-10 w-full max-w-7xl h-full relative pointer-events-none">
-        {/* 使用 pointer-events-auto 確保按鈕仍可點擊 */}
+        {/* 使用 pointer-events-auto 確保按鈕仍可點選 */}
         <div
           className={`absolute ${isMobile ? "top-1/2 right-0" : "top-1/2 right-1/3"} pointer-events-auto`}
           style={isMobile ? { transform: "translateY(-50%)" } : { transform: "translate(50%, -50%)" }}
