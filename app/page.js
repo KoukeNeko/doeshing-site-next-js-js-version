@@ -33,7 +33,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="w-screen h-dvh relative flex">
+    <div className="w-screen h-dvh relative flex overflow-visible max-w-7xl">
       <div className="z-0 absolute top-0 left-0 w-full h-full">
         <CardComponent />
       </div>
