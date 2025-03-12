@@ -18,7 +18,10 @@ import {
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 import { useControls } from "leva";
 
+// 擴展 meshline 幾何與材質，使其可在 JSX 中使用
 extend({ MeshLineGeometry, MeshLineMaterial });
+
+// 預先載入模型與貼圖
 useGLTF.preload(
   "https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/untitled.glb"
 );
@@ -26,11 +29,14 @@ useTexture.preload(
   "https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/band-SITCON.jpeg"
 );
 
-export default function CardAnimationMobile() {
+export default function App() {
+  // 利用 leva 控制 debug 模式（可調整物理 debug 視覺化）
   // const { debug } = useControls({ debug: false });
   return (
-    <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
+    <Canvas camera={{ position: [0, 0, 13], fov: 25 }} gl={{ alpha: true }} style={{ background: 'transparent' }}>
+      {/* 環境光 */}
       <ambientLight intensity={Math.PI} />
+      {/* Physics 提供物理模擬環境 */}
       <Physics
         debug={false}
         interpolate
@@ -39,8 +45,8 @@ export default function CardAnimationMobile() {
       >
         <Band />
       </Physics>
-      <Environment background blur={0.75}>
-        <color attach="background" args={["black"]} />
+      {/* 獨立的背景環境，不受物理模擬影響 */}
+      <Environment blur={0.75}>
         <Lightformer
           intensity={2}
           color="white"
@@ -75,8 +81,23 @@ export default function CardAnimationMobile() {
 }
 
 function Band({ maxSpeed = 50, minSpeed = 10 }) {
-  const band = useRef(), fixed = useRef(), j1 = useRef(), j2 = useRef(), j3 = useRef(), card = useRef() // prettier-ignore
-  const vec = new THREE.Vector3(), ang = new THREE.Vector3(), rot = new THREE.Vector3(), dir = new THREE.Vector3() // prettier-ignore
+  // 取得畫布尺寸，MeshLine 需要解析度資訊
+  const { width, height } = useThree((state) => state.size);
+  // 建立各物理物件的參考
+  const band = useRef();
+  const fixed = useRef();
+  const j1 = useRef();
+  const j2 = useRef();
+  const j3 = useRef();
+  const card = useRef();
+
+  // 建立輔助向量，方便做數學計算
+  const vec = new THREE.Vector3();
+  const ang = new THREE.Vector3();
+  const rot = new THREE.Vector3();
+  const dir = new THREE.Vector3();
+
+  // 統一設定物理物件的屬性
   const segmentProps = {
     type: "dynamic",
     canSleep: true,
@@ -84,13 +105,16 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     angularDamping: 2,
     linearDamping: 2,
   };
+
+  // 載入 glTF 模型與貼圖，這邊的模型用於卡片與其他裝飾
   const { nodes, materials } = useGLTF(
     "https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/untitled.glb"
   );
   const texture = useTexture(
     "https://pub-d2c4f3e05c9b425d8db726c2b57fa0e2.r2.dev/band-SITCON.jpeg"
   );
-  const { width, height } = useThree((state) => state.size);
+
+  // 建立一條 Catmull-Rom 曲線，用來根據各物理節點產生平滑曲線（32 個點）
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([
@@ -100,27 +124,39 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         new THREE.Vector3(),
       ])
   );
+  // 狀態：拖曳與懸停
   const [dragged, drag] = useState(false);
   const [hovered, hover] = useState(false);
 
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]) // prettier-ignore
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]) // prettier-ignore
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]) // prettier-ignore
-  useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.45, 0]]) // prettier-ignore
+  // 建立繩索連接，利用 Rapier 的 useRopeJoint 與 useSphericalJoint
+  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
+  useSphericalJoint(j3, card, [
+    [0, 0, 0],
+    [0, 1.45, 0],
+  ]);
 
+  // 當滑鼠懸停時改變游標
   useEffect(() => {
     if (hovered) {
       document.body.style.cursor = dragged ? "grabbing" : "grab";
-      return () => void (document.body.style.cursor = "auto");
+      return () => {
+        document.body.style.cursor = "auto";
+      };
     }
   }, [hovered, dragged]);
 
   useFrame((state, delta) => {
+    // 若處於拖曳狀態，計算卡片的新位置
     if (dragged) {
+      // 將滑鼠指標轉換成世界座標
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();
       vec.add(dir.multiplyScalar(state.camera.position.length()));
+      // 喚醒所有物件，防止物理休眠
       [card, j1, j2, j3, fixed].forEach((ref) => ref.current?.wakeUp());
+      // 設定卡片的下一個位置（扣除拖曳偏移量）
       card.current?.setNextKinematicTranslation({
         x: vec.x - dragged.x,
         y: vec.y - dragged.y,
@@ -128,7 +164,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       });
     }
     if (fixed.current) {
-      // Fix most of the jitter when over pulling the card
+      // 修正 j1 與 j2 的位移，減少過度拉伸造成的抖動
       [j1, j2].forEach((ref) => {
         if (!ref.current.lerped)
           ref.current.lerped = new THREE.Vector3().copy(
@@ -143,24 +179,31 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
         );
       });
-      // Calculate catmul curve
+      // 更新曲線點，根據各個連接點的位置產生平滑曲線
       curve.points[0].copy(j3.current.translation());
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
+      // 更新 MeshLine 幾何的點陣列（32 個插值點）
       band.current.geometry.setPoints(curve.getPoints(32));
-      // Tilt it back towards the screen
+      // 調整卡片角速度，使其略微回正（讓卡片保持面向螢幕）
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+      card.current.setAngvel({
+        x: ang.x,
+        y: ang.y - rot.y * 0.25,
+        z: ang.z,
+      });
     }
   });
 
-  curve.curveType = "chordal";
+  // 設定貼圖包覆模式
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  curve.curveType = "chordal";
 
   return (
     <>
+      {/* 包含所有物理節點與卡片的群組，這裡位置 [0,4,0] 為大致的初始位置 */}
       <group position={[0, 4.25, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
@@ -179,23 +222,27 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           type={dragged ? "kinematicPosition" : "dynamic"}
         >
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
+          {/* 卡片的可拖曳區域 */}
           <group
             scale={2.25}
             position={[0, -1.2, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
-            onPointerUp={(e) => (
-              e.target.releasePointerCapture(e.pointerId), drag(false)
-            )}
-            onPointerDown={(e) => (
-              e.target.setPointerCapture(e.pointerId),
+            onPointerDown={(e) => {
+              e.target.setPointerCapture(e.pointerId);
+              // 計算拖曳起始偏移量
               drag(
                 new THREE.Vector3()
                   .copy(e.point)
                   .sub(vec.copy(card.current.translation()))
-              )
-            )}
+              );
+            }}
+            onPointerUp={(e) => {
+              e.target.releasePointerCapture(e.pointerId);
+              drag(false);
+            }}
           >
+            {/* 卡片模型（從 glTF 載入） */}
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial
                 map={materials.base.map}
@@ -215,6 +262,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           </group>
         </RigidBody>
       </group>
+      {/* 利用 MeshLine 顯示繩索 */}
       <mesh ref={band}>
         <meshLineGeometry />
         <meshLineMaterial
