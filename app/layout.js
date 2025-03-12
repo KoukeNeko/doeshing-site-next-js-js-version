@@ -35,7 +35,9 @@ export default function RootLayout({ children }) {
         }}
         className={`${inter.className} ${geistSans.variable} ${geistMono.variable} min-h-dvh flex flex-col bg-zinc-950 text-zinc-200 antialiased`}
       >
-        <Header />
+        <Header>
+        <meta name="theme-color" content="#09090b" />
+        </Header>
         <main className="flex-grow pt-0 mx-0 flex items-center justify-center w-full">
           {children}
         </main>
