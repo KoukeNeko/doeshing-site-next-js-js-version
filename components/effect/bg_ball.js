@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * BgBall 元件 - 創建一個浮動彩色球體的背景動畫效果
@@ -8,6 +8,27 @@ import { useEffect } from "react";
  * 回傳 null，因為這僅是一個 Side Effect 元件，不直接渲染任何視覺內容
  */
 export default function BgBall() {
+
+  const [isMobile, setIsMobile] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    function checkScreenSize() {
+      setIsMobile(window.innerWidth < 1000);
+      console.log("isMobile", isMobile);
+    }
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    setInitialized(true);
+
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  }, []);
+
+  if (!initialized) return null; // hide content until setup finishes
+
+
   useEffect(() => {
     // 建立一個容器作為固定背景
     const container = document.createElement("div");
@@ -28,7 +49,7 @@ export default function BgBall() {
 
     // 定義球體的顏色選項
     const colors = ["#3CC157", "#2AA7FF", "#1B1B1B", "#FCBC0F", "#F85F36"];
-    const numBalls = 50;                    // 球體總數
+    const numBalls = isMobile ? 30 : 50;                    // 球體總數
     const balls = [];                       // 用於存儲所有球體元素的陣列
 
     // 創建球體並添加到容器中
