@@ -36,6 +36,7 @@ const TrailingCursor = ({
     canvasRef.current = canvas;
     canvas.style.top = '0px';
     canvas.style.left = '0px';
+    canvas.style.zIndex = '9999';
     canvas.style.pointerEvents = 'none';
     if (hasWrapperEl) {
       canvas.style.position = 'absolute';
