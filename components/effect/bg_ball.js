@@ -10,12 +10,10 @@ import { useEffect, useState } from "react";
 export default function BgBall() {
 
   const [isMobile, setIsMobile] = useState(false);
-  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     function checkScreenSize() {
       setIsMobile(window.innerWidth < 1000);
-      console.log("isMobile", isMobile);
     }
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
@@ -25,8 +23,6 @@ export default function BgBall() {
       window.removeEventListener("resize", checkScreenSize);
     };
   }, []);
-
-  if (!initialized) return null; // hide content until setup finishes
 
 
   useEffect(() => {
