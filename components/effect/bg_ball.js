@@ -17,7 +17,6 @@ export default function BgBall() {
     }
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
-    setInitialized(true);
 
     return () => {
       window.removeEventListener("resize", checkScreenSize);
