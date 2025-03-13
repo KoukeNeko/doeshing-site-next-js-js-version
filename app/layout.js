@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import { Inter } from "next/font/google";
 
 import BgBall from "@/components/effect/bg_ball";
+import TrailingCursor from "@/components/effect/TrailingCursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
         </main>
         <Footer />
       </body>
+      <TrailingCursor />
       <BgBall />
     </html>
   );
