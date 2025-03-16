@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
  * 球體會與左上角的微妙漸層光源產生互動
  * 回傳 null，因為這僅是一個 Side Effect 元件，不直接渲染任何視覺內容
  */
+
 export default function BgBall() {
 
   const [isMobile, setIsMobile] = useState(false);
