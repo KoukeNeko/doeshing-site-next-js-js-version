@@ -20,7 +20,7 @@ export function ProfileHeader({
   onEdit,
 }) {
   return (
-    <Card className="bg-zinc-900 border-zinc-800 mb-6 mt-6">
+    <Card className="bg-zinc-900/80 backdrop-blur-sm border-zinc-800 mb-6 mt-6">
       <CardContent className="pt-6">
         <div className="flex flex-col md:flex-row gap-6">
           <img
