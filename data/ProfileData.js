@@ -1,9 +1,9 @@
 export const ProfileData = {
   name: "De-Sheng Chen",
   avatar: "https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/438998272_959744565776483_8432601726905502698_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=W4RtKp86XQUQ7kNvgGqxVZt&_nc_oc=AdhzLcDxUJhAojXzvf2DW8M4MzaEXHYZwXkemPngIUvaUKGsyPMRAkJlN_sxxuLOZck&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=7dgvtLNvfghQuf8FqI_6Ag&oh=00_AYExShlCO9-3bQdAvyp_alL5K57iRN-07mTE3zdVqptaSQ&oe=67DC7023",
-  role: "Graduate Student at NTOU & CCU | Full-Stack Developer | Cloud & AI Enthusiast",
+  role: "Graduate Student at CCU | Full-Stack Developer | Cloud & AI Enthusiast",
   location: "Taipei Metropolitan Area",
-  connections: "97 followers · 93 connections",
+  connections: "149 followers · 144 connections",
   about: `Hello World! I am De-Sheng Chen.
 
 I graduated from the Department of Computer Science and Information Engineering at NYUST, and I am currently pursuing my Master's degree at the Institute of Computer Science and Information Engineering.
