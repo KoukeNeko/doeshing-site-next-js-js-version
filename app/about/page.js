@@ -25,12 +25,12 @@ import { ProfileHeader } from "@/components/card/ProfileHeader";
 import { ProfileData } from "../../data/ProfileData";
 
 export default function AboutPage() {
-  // 直接使用導入的數據，不需要 useState 和 useEffect
+
   const profile = ProfileData;
   
   // 定義需要的函數
   const t = (key) => {
-    // 這裡應該用您的翻譯系統，暫時用一個簡單的對象替代
+
     const translations = {
       'aboutMe': '關於我',
       'whoAmI': '我是誰',
@@ -51,14 +51,6 @@ export default function AboutPage() {
       'achievements': '成就'
     };
     return translations[key] || key;
-  };
-  
-  const handleEdit = (section, index) => {
-    console.log(`編輯 ${section} 索引 ${index}`);
-  };
-  
-  const handleAdd = (section) => {
-    console.log(`新增 ${section}`);
   };
 
   return (

@@ -15,7 +15,7 @@ export function ProfileCard({
   onEdit
 }) {
   return (
-    <Card className="bg-zinc-900 border-zinc-800 mb-6">
+    <Card className="bg-zinc-900/80 border-zinc-800 mb-6 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-xl text-zinc-200 flex items-center gap-2">
           <Icon size={20} />
