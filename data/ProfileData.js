@@ -1,13 +1,16 @@
 export const ProfileData = {
   name: "De-Sheng Chen",
   avatar: "https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/438998272_959744565776483_8432601726905502698_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=W4RtKp86XQUQ7kNvgGqxVZt&_nc_oc=AdhzLcDxUJhAojXzvf2DW8M4MzaEXHYZwXkemPngIUvaUKGsyPMRAkJlN_sxxuLOZck&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=7dgvtLNvfghQuf8FqI_6Ag&oh=00_AYExShlCO9-3bQdAvyp_alL5K57iRN-07mTE3zdVqptaSQ&oe=67DC7023",
-  role: "A student studying CSIE at NTOU | Full-Stack Developer | Learning Cloud Development",
-  location: "臺北首都圈",
+  role: "Graduate Student at NTOU & CCU | Full-Stack Developer | Cloud & AI Enthusiast",
+  location: "Taipei Metropolitan Area",
   connections: "97 followers · 93 connections",
   about: `Hello World! I am De-Sheng Chen.
-      I graduated from the Department of Computer Science and Information Engineering at NYUST, and I am currently studying at the Institute of Computer Science and Information Engineering at NTOU.
-      
-      Specializing in full-stack development and mobile app development, I am also sprinting on the path of learning cloud technologies.`,
+
+I graduated from the Department of Computer Science and Information Engineering at NYUST, and I am currently pursuing my Master's degree at the Institute of Computer Science and Information Engineering.
+
+Specializing in full-stack development and mobile app development, I am passionate about cloud technologies and artificial intelligence. With hands-on experience in web development, app creation, and cloud infrastructure, I aim to build innovative solutions that address real-world challenges.
+
+My technical journey has equipped me with skills in various programming languages and frameworks, enabling me to adapt quickly to new technologies and contribute effectively to projects from conception to deployment.`,
 
   experience: [
     {
@@ -25,24 +28,56 @@ export const ProfileData = {
 
   education: [
     {
+      school: "National Chung Cheng University",
+      degree: "Master's Degree",
+      field: "Computer Science Information Engineering",
+      period: "Feb 2025 - Feb 2027",
+      skills: [],
+      achievements: [],
+      logo: "/api/placeholder/32/32",
+    },
+    {
       school: "National Taiwan Ocean University",
       degree: "Master's Degree",
-      field: "Department of Computer Science and Information Engineering",
-      period: "2024 - 2026",
+      field: "資訊工程學系",
+      period: "Aug 2024 - Feb 2025",
+      skills: ["Unity", "Software Engineering"],
+      achievements: [],
       logo: "/api/placeholder/32/32",
     },
     {
       school: "National Yunlin University of Science and Technology",
       degree: "Bachelor's Degree",
-      field: "Department of Computer Science and Information Engineering",
-      period: "2021 - 2024",
+      field: "資訊工程學系",
+      period: "Jun 2021 - Jun 2024",
+      skills: [
+        "プログラミング", 
+        "軟體設計", 
+        "React.js", 
+        "HTML5", 
+        "C#", 
+        "Androidデザイン", 
+        "Android Jetpack", 
+        "資料結構", 
+        "React Native", 
+        ".NET", 
+        "階層式樣式表 (CSS)", 
+        "Kotlin", 
+        "Docker"
+      ],
+      achievements: [
+        "［畢業專題］基於LoRaWAN 技術之電器管理系統",
+        "榮獲2023年實務專題競賽暨成果發表會 第二名"
+      ],
       logo: "/api/placeholder/32/32",
     },
     {
       school: "National Kaohsiung University of Science and Technology",
       degree: "Bachelor's Degree",
-      field: "Department of Computer Science and Information Engineering",
-      period: "2020 - 2021",
+      field: "資訊工程學系",
+      period: "Sep 2020 - Jun 2021",
+      skills: ["Java"],
+      achievements: [],
       logo: "/api/placeholder/32/32",
     },
   ],
@@ -153,6 +188,13 @@ export const ProfileData = {
 
   volunteer: [
     {
+      role: "SITCON Hour of Code 2024 花蓮場 紀錄",
+      organization: "SITCON, Students' Information Technology Conference",
+      period: "Dec 2024 · 1 mo",
+      category: "Education",
+      description: [],
+    },
+    {
       role: "活動志工",
       organization: "油廠社區生態保存協會",
       period: "2022",
@@ -182,6 +224,7 @@ export const ProfileData = {
         "Our system uses LoRaWAN technology to remotely control and monitor electrical appliances over large areas, including analyzing power consumption and health status. Our project aims to enable managers to automatically monitor the on/off status and usage of multiple devices, achieving real-time management through databases and WebSocket transmission. Compared to WiFi, LoRaWAN offers longer transmission distances and lower energy consumption, making it suitable for wide-area applications. The system features appliance health analysis and a user-friendly interface, allowing users to easily manage and maintain their devices.",
       collaborators: ["田以諾"],
       technologies: ["LoRaWAN", "WebSocket", "Database"],
+      achievements: ["榮獲2023年實務專題競賽暨成果發表會 第二名"],
     },
   ],
 

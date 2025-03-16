@@ -13,6 +13,7 @@ import {
   Calendar,
   Code,
   Signature,
+  CheckCircle,
 } from "lucide-react";
 
 // 修正導入路徑
@@ -45,7 +46,9 @@ export default function AboutPage() {
       'expiresOn': '到期於',
       'credentialNo': '證書編號：',
       'seeCredential': '查看證書',
-      'score': '分數'
+      'score': '分數',
+      'skills': '技能',
+      'achievements': '成就'
     };
     return translations[key] || key;
   };
@@ -71,7 +74,6 @@ export default function AboutPage() {
         role={profile.role}
         location={profile.location}
         connections={profile.connections}
-        onEdit={() => handleEdit('header', 0)}
       />
 
       {/* 關於我 */}
@@ -79,7 +81,6 @@ export default function AboutPage() {
         icon={Signature} 
         title={t('about')}
         section="about"
-        onEdit={() => handleEdit('about', 0)}
       >
         <p className="text-zinc-400 whitespace-pre-line">
           {profile.about}
@@ -91,8 +92,6 @@ export default function AboutPage() {
         icon={Briefcase} 
         title={t('experience')}
         section="experience"
-        onAdd={() => handleAdd('experience')}
-        onEdit={() => handleEdit('experience', -1)}
       >
         {profile.experience.map((exp, index) => (
           <ProfileItem
@@ -104,7 +103,6 @@ export default function AboutPage() {
             location={exp.location}
             description={exp.description}
             section="experience"
-            onEdit={() => handleEdit('experience', index)}
           />
         ))}
       </ProfileCard>
@@ -114,18 +112,44 @@ export default function AboutPage() {
         icon={GraduationCap} 
         title={t('education')}
         section="education"
-        onAdd={() => handleAdd('education')}
-        onEdit={() => handleEdit('education', -1)}
       >
         {profile.education.map((edu, index) => (
           <ProfileItem
             key={index}
             icon={GraduationCap}
             title={edu.school}
-            subtitle={`${edu.degree} · ${edu.field_of_study}`}
+            subtitle={`${edu.degree} · ${edu.field}`}
             period={edu.period}
             section="education"
-            onEdit={() => handleEdit('education', index)}
+            extra={
+              <>
+                {edu.skills && edu.skills.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-sm font-medium text-zinc-300">{t('skills')}</p>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {edu.skills.map((skill, i) => (
+                        <span key={i} className="text-xs px-2 py-1 bg-zinc-800 text-zinc-300 rounded">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {edu.achievements && edu.achievements.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-medium text-zinc-300">{t('achievements')}</p>
+                    <ul className="mt-1 space-y-1">
+                      {edu.achievements.map((achievement, i) => (
+                        <li key={i} className="text-sm text-zinc-400 flex items-start">
+                          <CheckCircle size={14} className="mr-1 mt-1 text-emerald-500 flex-shrink-0" />
+                          <span>{achievement}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
+            }
           />
         ))}
       </ProfileCard>
@@ -135,8 +159,6 @@ export default function AboutPage() {
         icon={Award} 
         title={t('licensesAndCerts')}
         section="certification"
-        onAdd={() => handleAdd('certification')}
-        onEdit={() => handleEdit('certification', -1)}
       >
         {profile.certifications.map((cert, index) => (
           <ProfileItem
@@ -144,9 +166,8 @@ export default function AboutPage() {
             icon={Award}
             title={cert.name}
             subtitle={cert.issuer}
-            period={`${t('issuedOn')} ${cert.issue_date}${cert.expired_date ? ` · ${t('expiresOn')} ${cert.expired_date}` : ''}`}
+            period={`${t('issuedOn')} ${cert.issue_date || cert.issued}${cert.expired_date ? ` · ${t('expiresOn')} ${cert.expired_date}` : ''}`}
             section="certification"
-            onEdit={() => handleEdit('certification', index)}
             extra={
               <>
                 {cert.credential_id && (
@@ -154,9 +175,9 @@ export default function AboutPage() {
                     {t('credentialNo')}{cert.credential_id}
                   </p>
                 )}
-                {cert.credential_url && (
+                {(cert.credential_url || cert.link) && (
                   <Link 
-                    href={cert.credential_url} 
+                    href={cert.credential_url || cert.link} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="inline-block mt-2 text-xs text-neutral-700 px-2 py-1 border border-neutral-700 rounded hover:bg-neutral-100"
@@ -176,8 +197,6 @@ export default function AboutPage() {
         icon={Calendar} 
         title={t('volunteerExp')}
         section="volunteer"
-        onAdd={() => handleAdd('volunteer')}
-        onEdit={() => handleEdit('volunteer', -1)}
       >
         {profile.volunteer.map((vol, index) => (
           <ProfileItem
@@ -188,7 +207,6 @@ export default function AboutPage() {
             period={vol.period}
             description={vol.description}
             section="volunteer"
-            onEdit={() => handleEdit('volunteer', index)}
           />
         ))}
       </ProfileCard>
@@ -198,8 +216,6 @@ export default function AboutPage() {
         icon={Code} 
         title={t('projects')}
         section="project"
-        onAdd={() => handleAdd('project')}
-        onEdit={() => handleEdit('project', -1)}
       >
         {profile.projects.map((project, index) => (
           <ProfileItem
@@ -209,7 +225,33 @@ export default function AboutPage() {
             period={project.period}
             description={project.description}
             section="project"
-            onEdit={() => handleEdit('project', index)}
+            extra={
+              <>
+                {project.technologies && project.technologies.length > 0 && (
+                  <div className="mt-2">
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {project.technologies.map((tech, i) => (
+                        <span key={i} className="text-xs px-2 py-1 bg-zinc-800 text-zinc-300 rounded">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {project.achievements && project.achievements.length > 0 && (
+                  <div className="mt-3">
+                    <ul className="mt-1 space-y-1">
+                      {project.achievements.map((achievement, i) => (
+                        <li key={i} className="text-sm text-zinc-400 flex items-start">
+                          <CheckCircle size={14} className="mr-1 mt-1 text-emerald-500 flex-shrink-0" />
+                          <span>{achievement}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
+            }
           />
         ))}
       </ProfileCard>
@@ -219,8 +261,6 @@ export default function AboutPage() {
         icon={LucideBookOpen} 
         title={t('testScores')}
         section="score"
-        onAdd={() => handleAdd('score')}
-        onEdit={() => handleEdit('score', -1)}
       >
         {profile.scores.map((score, index) => (
           <ProfileItem
@@ -230,7 +270,6 @@ export default function AboutPage() {
             subtitle={`${t('score')} ${score.score}`}
             period={score.date}
             section="score"
-            onEdit={() => handleEdit('score', index)}
           />
         ))}
       </ProfileCard>
@@ -240,8 +279,6 @@ export default function AboutPage() {
         icon={Globe} 
         title={t('languages')}
         section="language"
-        onAdd={() => handleAdd('language')}
-        onEdit={() => handleEdit('language', -1)}
       >
         {profile.languages.map((lang, index) => (
           <ProfileItem
@@ -250,7 +287,6 @@ export default function AboutPage() {
             title={lang.name}
             subtitle={lang.level}
             section="language"
-            onEdit={() => handleEdit('language', index)}
           />
         ))}
       </ProfileCard>
