@@ -21,26 +21,6 @@ export function ProfileCard({
           <Icon size={20} />
           {title}
         </CardTitle>
-        {isAdmin && section && (
-          <div className="flex gap-2">
-            {onAdd && (
-              <button
-                onClick={onAdd}
-                className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
-              >
-                新增
-              </button>
-            )}
-            {onEdit && (
-              <button
-                onClick={onEdit}
-                className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
-              >
-                編輯
-              </button>
-            )}
-          </div>
-        )}
       </CardHeader>
       <CardContent>
         {children}
