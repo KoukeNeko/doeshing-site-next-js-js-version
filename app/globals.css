@@ -154,3 +154,27 @@
   backdrop-filter: blur(0.75px);
   pointer-events: none;
 }
+
+/* Remove Markdown editor backgrounds */
+.w-md-editor,
+.wmde-markdown,
+.w-md-editor-preview,
+.w-md-editor-text,
+.w-md-editor-text-pre,
+.w-md-editor-text-input {
+  background-color: transparent !important;
+}
+
+.w-md-editor-toolbar {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.w-md-editor-toolbar ul {
+  background-color: transparent !important;
+}
+
+/* Ensure text remains visible */
+.wmde-markdown {
+  color: inherit;
+}
