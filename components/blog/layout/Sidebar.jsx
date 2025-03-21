@@ -5,100 +5,128 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
   Home,
-  Hash,
-  Bell,
-  Mail,
-  Bookmark,
-  User,
-  Settings,
-  PenSquare
+  Code2,
+  Laptop,
+  GraduationCap,
+  Coffee,
+  Lightbulb,
+  PenTool,
+  Rocket,
+  Settings
 } from 'lucide-react';
 
 export default function Sidebar() {
   const pathname = usePathname();
   
-  const navItems = [
+  const categories = [
     {
-      name: '首頁',
+      name: '所有文章',
       href: '/blog',
-      icon: Home
+      icon: Home,
+      description: '瀏覽所有文章'
     },
     {
-      name: '探索',
-      href: '/blog/explore',
-      icon: Hash
+      name: '程式開發',
+      href: '/blog/category/programming',
+      icon: Code2,
+      description: '軟體開發、程式語言、框架等',
+      subcategories: ['React', 'Next.js', 'JavaScript', 'Python']
     },
     {
-      name: '通知',
-      href: '/blog/notifications',
-      icon: Bell
+      name: '技術研究',
+      href: '/blog/category/tech',
+      icon: Laptop,
+      description: '技術研究、新技術探索',
+      subcategories: ['AI', '區塊鏈', '雲端運算']
     },
     {
-      name: '私訊',
-      href: '/blog/messages',
-      icon: Mail
+      name: '學習筆記',
+      href: '/blog/category/study',
+      icon: GraduationCap,
+      description: '課程筆記、學習心得',
+      subcategories: ['資料結構', '演算法', '系統設計']
     },
     {
-      name: '書籤',
-      href: '/blog/bookmarks',
-      icon: Bookmark
+      name: '生活紀錄',
+      href: '/blog/category/life',
+      icon: Coffee,
+      description: '日常生活、心得分享',
+      subcategories: ['旅遊', '美食', '心得']
     },
     {
-      name: '個人檔案',
-      href: '/blog/profile',
-      icon: User
+      name: '專案開發',
+      href: '/blog/category/projects',
+      icon: Rocket,
+      description: '個人專案、作品分享',
+      subcategories: ['作品集', '開源專案']
     },
     {
-      name: '設定',
-      href: '/blog/settings',
-      icon: Settings
+      name: '創意發想',
+      href: '/blog/category/ideas',
+      icon: Lightbulb,
+      description: '想法分享、創意發想',
+      subcategories: ['設計', 'UI/UX', '產品']
     }
   ];
 
   return (
-    <div className="flex flex-col h-full px-2">
+    <div className="h-full px-2 py-4 overflow-y-auto">
       {/* Logo */}
       <Link 
         href="/blog" 
-        className="p-3 mb-1 rounded-full hover:bg-zinc-900 w-fit"
+        className="flex items-center px-4 py-2 mb-4"
       >
-        <span className="text-xl">🌐</span>
+        <span className="text-xl font-bold">部落格分類</span>
       </Link>
 
-      {/* Navigation */}
+      {/* Categories */}
       <nav className="space-y-1">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
+        {categories.map((category) => {
+          const isActive = pathname === category.href || pathname.startsWith(category.href + '/');
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center px-4 py-3 text-xl rounded-full transition-colors hover:bg-zinc-900 ${
-                isActive ? 'font-bold' : ''
-              }`}
-            >
-              <item.icon size={24} className="mr-4" />
-              <span className="truncate">{item.name}</span>
-            </Link>
+            <div key={category.href} className="mb-2">
+              <Link
+                href={category.href}
+                className={`flex items-center px-4 py-2 text-sm rounded-lg transition-colors hover:bg-zinc-800/50 ${
+                  isActive ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400'
+                }`}
+              >
+                <category.icon size={18} className="mr-3 flex-shrink-0" />
+                <div>
+                  <div className="font-medium">{category.name}</div>
+                  <div className="text-xs text-zinc-500">{category.description}</div>
+                </div>
+              </Link>
+              
+              {/* Subcategories */}
+              {category.subcategories && isActive && (
+                <div className="ml-9 mt-1 space-y-1">
+                  {category.subcategories.map((sub) => (
+                    <Link
+                      key={sub}
+                      href={`${category.href}/${sub.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="flex items-center px-4 py-1.5 text-sm text-zinc-400 rounded-lg hover:bg-zinc-800/50 hover:text-zinc-300"
+                    >
+                      <span className="w-1.5 h-1.5 bg-zinc-600 rounded-full mr-3"></span>
+                      {sub}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           );
         })}
       </nav>
 
-      {/* Post Button */}
-      <button className="mt-4 w-[90%] bg-blue-500 hover:bg-blue-600 text-white rounded-full py-3 font-bold transition-colors">
-        發表文章
-      </button>
-
-      {/* Profile Button */}
-      <div className="mt-auto mb-4">
-        <button className="w-full rounded-full p-3 hover:bg-zinc-900 flex items-center">
-          <div className="w-10 h-10 bg-zinc-800 rounded-full mr-3"></div>
-          <div className="flex-grow text-left">
-            <div className="font-bold">陳德生</div>
-            <div className="text-zinc-500 text-sm">@doeshing</div>
-          </div>
-          <div className="text-zinc-500">•••</div>
-        </button>
+      {/* Settings */}
+      <div className="mt-6 px-4">
+        <Link
+          href="/blog/settings"
+          className="flex items-center py-2 text-sm text-zinc-400 hover:text-zinc-300"
+        >
+          <Settings size={18} className="mr-3" />
+          部落格設定
+        </Link>
       </div>
     </div>
   );

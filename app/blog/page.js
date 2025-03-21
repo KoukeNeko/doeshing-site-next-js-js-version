@@ -77,7 +77,7 @@ export default function BlogListPage() {
   return (
     <div className="px-4 py-8">
       {/* Search bar */}
-      <div className="sticky top-16 py-4 z-10">
+      {/* <div className="sticky top-16 py-4 z-10">
         <div className="relative">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400"
@@ -91,7 +91,7 @@ export default function BlogListPage() {
             className="w-full pl-10 pr-4 py-2 bg-zinc-900 border border-zinc-800 rounded-full focus:outline-none focus:ring-1 focus:ring-zinc-700 text-zinc-300"
           />
         </div>
-      </div>
+      </div> */}
 
       {/* Blog post list */}
       {isLoading ? (
