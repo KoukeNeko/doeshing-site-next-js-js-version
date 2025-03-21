@@ -177,11 +177,9 @@ c = \\pm\\sqrt{a^2 + b^2}
 More complex equations:
 
 \`\`\`KaTeX
-$$\\begin{aligned}
-\\frac{\\partial f}{\\partial x} &= 2x\\\\
-\\int_{0}^{\\infty} e^{-x^2} dx &= \\frac{\\sqrt{\\pi}}{2}\\\\
-\\sum_{n=1}^{\\infty} \\frac{1}{n^2} &= \\frac{\\pi^2}{6}
-\\end{aligned}$$
+\\f\\relax{x} = \\int_{-\\infty}^\\infty
+\\f\\hat\\xi\\,e^{2 \\pi i \\xi x}
+\\,d\\xi
 \`\`\`
 
 ### Custom Styling
@@ -250,15 +248,18 @@ Here's a sentence with a footnote[^1].
           previewOptions={{
             style: customStyles.wrapper,
             components: {
-              code: ({ children = [], className, ...props }) => {
-                if (typeof children === 'string' && /^\$\$(.*)\$\$/.test(children)) {
-                  const html = katex.renderToString(children.replace(/^\$\$(.*)\$\$/, '$1'), {
-                    throwOnError: false,
-                    displayMode: true,
-                  });
-                  return <code dangerouslySetInnerHTML={{ __html: html }} style={{ background: 'transparent' }} />;
+              code: ({ inline, children = [], className, ...props }) => {
+                const txt = children[0] || '';
+                if (inline) {
+                  if (typeof txt === 'string' && /^\$\$(.*)\$\$/.test(txt)) {
+                    const html = katex.renderToString(txt.replace(/^\$\$(.*)\$\$/, '$1'), {
+                      throwOnError: false,
+                    });
+                    return <code dangerouslySetInnerHTML={{ __html: html }} />;
+                  }
+                  return <code>{txt}</code>;
                 }
-                const code = props.node && props.node.children ? getCodeString(props.node.children) : children;
+                const code = props.node && props.node.children ? getCodeString(props.node.children) : txt;
                 if (
                   typeof code === 'string' &&
                   typeof className === 'string' &&
@@ -266,11 +267,10 @@ Here's a sentence with a footnote[^1].
                 ) {
                   const html = katex.renderToString(code, {
                     throwOnError: false,
-                    displayMode: true,
                   });
-                  return <code style={{ fontSize: '150%', background: 'transparent' }} dangerouslySetInnerHTML={{ __html: html }} />;
+                  return <code style={{ fontSize: '150%' }} dangerouslySetInnerHTML={{ __html: html }} />;
                 }
-                return <code className={String(className)}>{children}</code>;
+                return <code className={String(className)}>{txt}</code>;
               },
             },
           }}
