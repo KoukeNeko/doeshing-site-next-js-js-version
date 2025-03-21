@@ -1,0 +1,180 @@
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+
+export default function LoginPage() {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Login attempt:", formData);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  return (
+    <div className="w-full max-w-7xl h-full flex flex-1">
+      {/* Left Side - Promo Content */}
+      <div className="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center p-12 text-zinc-200">
+        
+        {/* Centered content with illustration */}
+        <div className="flex flex-col items-center justify-center space-y-8 z-10 w-full max-w-lg">
+          <div className="w-full h-80 flex items-center justify-center">
+            <svg 
+              className="w-full h-full"
+              viewBox="0 0 800.012 793.179"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+            >
+              <g transform="translate(-571.203 -218.417)">
+                <path d="M981.632,982.127H424.5V410.494c0-121.619,98.944-220.563,220.563-220.563H761.069c121.619,0,220.563,98.944,220.563,220.563Z" transform="translate(244.764 28.486)" fill="#18181b"/>
+                <path d="M865.627,982.125H424.5V410.492a218.856,218.856,0,0,1,42.122-129.658c1.013-1.381,2.024-2.744,3.066-4.092a220.511,220.511,0,0,1,46.943-45.564c1.007-.733,2.018-1.453,3.044-2.173a220.046,220.046,0,0,1,48.039-25.123c1.009-.382,2.036-.765,3.063-1.133a219.832,219.832,0,0,1,47.484-11.2c1-.137,2.035-.244,3.065-.352a223.293,223.293,0,0,1,47.479,0c1.028.107,2.059.215,3.074.353a219.788,219.788,0,0,1,47.471,11.2c1.027.367,2.055.75,3.066,1.134A219.5,219.5,0,0,1,769.9,228.635c1.025.7,2.051,1.424,3.062,2.144a222.832,222.832,0,0,1,28.06,23.757,220.263,220.263,0,0,1,19.423,22.21c1.039,1.344,2.049,2.707,3.061,4.086a218.858,218.858,0,0,1,42.124,129.66Z" transform="translate(244.764 28.488)" fill="#27272a"/>
+                <circle cx="24.422" cy="24.422" r="24.422" transform="translate(1050.098 564.909)" fill="#3f3f46"/>
+                <path d="M1064.222,710.828H266.783c-.71,0-1.286-.814-1.286-1.817s.576-1.818,1.286-1.818h797.439c.71,0,1.286.814,1.286,1.818S1064.933,710.828,1064.222,710.828Z" transform="translate(305.707 300.768)" fill="#3f3f46"/>
+                <path d="M705.852,759.927H507.422a9.869,9.869,0,0,1-9.922-9.792V307.223a9.869,9.869,0,0,1,9.921-9.792H705.852a9.869,9.869,0,0,1,9.921,9.792V750.135a9.869,9.869,0,0,1-9.922,9.792Z" transform="translate(283.19 85.073)" fill="#18181b"/>
+                <rect width="218.274" height="3.053" transform="translate(780.69 525.816)" fill="#27272a"/>
+                <rect width="218.274" height="3.053" transform="translate(781.453 699.995)" fill="#27272a"/>
+                <rect width="3.053" height="464.023" transform="translate(849.378 382.505)" fill="#27272a"/>
+                <rect width="3.053" height="464.023" transform="translate(925.697 382.505)" fill="#27272a"/>
+                <g transform="translate(1075.599 381.07)">
+                  <path d="M532.06,220.925a23,23,0,0,1-.621,5.294l-17.588,74.846a19.759,19.759,0,0,1-23.787,14.714l-70.488-21.872-3.442-1.063a20.41,20.41,0,0,1-15.462,3.21c-10.231-1.81-17.314-10.136-15.82-18.609s11-13.862,21.23-12.062a20.45,20.45,0,0,1,13.441,8.294l.052.01.179.032,61.352,7.589,5.157-62.226a22.937,22.937,0,0,1,45.8,1.842Z" transform="translate(-384.654 -92.478)" fill="#52525b"/>
+                  <path d="M523.778,220.925a23,23,0,0,1-.621,5.294l-14.431,78a19.759,19.759,0,0,1-23.787,14.714l-70.488-19.6,3.158-30.523h0l53.679,7.368,6.694-57.1a22.937,22.937,0,0,1,45.8,1.842Z" transform="translate(-376.371 -92.478)" fill="#3f3f46"/>
+                  <rect width="21.152" height="21.152" transform="translate(221.929 552.023) rotate(-36.399)" fill="#52525b"/>
+                  <path d="M601.519,570.531l-36.191,26.681a25.93,25.93,0,0,1-10.5,4.579l-9.036,1.712a4.978,4.978,0,0,1-4.842-7.965l10.957-13.956,14.423-29.737.083.076c2.085,1.906,5.251,4.772,5.488,4.912,4.454.986,7.875.432,10.167-1.646,4-3.624,3.193-10.733,3.184-10.8l-.007-.055.047-.028a3.561,3.561,0,0,1,3.119-.427c2.082.76,3.168,3.492,3.324,3.911,2.032.285,7.318,6.345,7.743,6.836,3.041.551,5.135,1.693,6.223,3.393a6.917,6.917,0,0,1,.548,5.635A12.556,12.556,0,0,1,601.519,570.531Z" transform="translate(-341.504 3.596)" fill="#27272a"/>
+                  <rect width="21.152" height="21.152" transform="translate(71.799 589.151)" fill="#52525b"/>
+                  <path d="M469.188,615.868H424.225a25.933,25.933,0,0,1-11.168-2.545l-8.289-3.984a4.978,4.978,0,0,1,.829-9.284l17.1-4.732,29.255-15.377.022.111c.547,2.771,1.395,6.957,1.5,7.211,3,3.437,6.082,5.021,9.16,4.708,5.369-.544,8.938-6.744,8.974-6.807l.027-.048.055.006a3.561,3.561,0,0,1,2.764,1.507c1.225,1.847.478,4.691.355,5.12,1.467,1.435,2.125,9.45,2.176,10.1,2.121,2.248,3.129,4.409,3,6.424a6.918,6.918,0,0,1-2.9,4.861,12.557,12.557,0,0,1-7.893,2.733Z" transform="translate(-379.847 13.676)" fill="#27272a"/>
+                  <path d="M550.486,317.714H449.111L432.951,654.023h35.7l23.066-152.868,92.559,122.294,33.792-30.574-67.584-91.721Z" transform="translate(-371.229 -59.214)" fill="#27272a"/>
+                  <path d="M522.94,162.995a37.361,37.361,0,1,0-48.555,35.653l7.223,47.733,36.82-30.683s-7.954-10.131-12.22-21.556A37.321,37.321,0,0,0,522.94,162.995Z" transform="translate(-366.985 -112.605)" fill="#52525b"/>
+                  <path d="M524.276,281.639l16.557,48.79-93.675-1.053,13.967-44.58Z" transform="translate(-367.28 -69.241)" fill="#52525b"/>
+                  <path d="M518.46,184.739l-41.541,14.442L437.647,401.925l80.814,9.867h39.5l-30.18-201.615a67.286,67.286,0,0,0-9.323-25.438h0Z" transform="translate(-369.923 -96.176)" fill="#3f3f46"/>
+                  <path d="M497.342,378.487l.723-33.325-19.458-.422-.723,33.325a20.428,20.428,0,0,0-6.155,14.543c-.225,10.388,6.561,18.96,15.158,19.147s15.749-8.083,15.974-18.471a20.428,20.428,0,0,0-5.519-14.8Z" transform="translate(-360.452 -51.702)" fill="#52525b"/>
+                  <path d="M421.883,197.209c1.943.331,4.223-4.377,6.4-8.963,4.562-9.6,7.462-15.7,7.682-24.328.188-7.352-1.854-5.422-3.841-21.767-.655-5.391-9.865-5.381-11.74-7.941-3.166-4.324,1.692-6.107-6.186-8.7-14.756-4.865-21.428,2.693-30.8,3.344-.237.016-4.882,4.56-7.477,4.795-4.546.412-11.1-.3-14.043-7.222-2.749-6.476-4.57,12.448-2.113,14.789a49.753,49.753,0,0,1,5.776,7.342c.1.411-4.331-12.944-5.776-8.99-1.04,2.845-1.991,21.244.654,21.794,2.212.46,20.594,7.52,40.974-6.4.723-.494.04.294,2.561,6.4,3.179,7.7,3.9,8.121,3.841,10.243-.12,4.593-3.569,5.946-2.561,8.963a6.2,6.2,0,0,0,6.4,3.841c2.7-.558,3.165-3.9,5.122-3.841,1.676.051,3.664,2.575,3.841,5.122.373,5.366-7.571,6.842-8.963,14.085-.786,4.088,8.458-2.865,10.243-2.561Z" transform="translate(-274.113 -123.882)" fill="#18181b"/>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Side - Login Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+        <div className="w-full max-w-md space-y-6">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-zinc-200 font-geist-sans">Welcome Back!</h2>
+            <p className="mt-2 text-zinc-400">Continue with Google or enter your details.</p>
+          </div>
+
+          {/* Google Login Button */}
+          <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-zinc-800 rounded-lg text-zinc-300 hover:bg-zinc-800/50 transition-colors">
+            <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                fill="currentColor"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                fill="currentColor"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+              />
+              <path
+                fill="currentColor"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              />
+            </svg>
+            Login with Google
+          </button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-zinc-800"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-zinc-950 text-zinc-500">or</span>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-zinc-300">
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                placeholder="example@gmail.com"
+                className="mt-1 block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-700 text-zinc-100 placeholder-zinc-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-zinc-300">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="mt-1 block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-700 text-zinc-100"
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-500 hover:text-zinc-400"
+                >
+                  👁️
+                </button>
+              </div>
+              <div className="flex justify-end mt-2">
+                <Link href="/forgot-password" className="text-sm text-zinc-400 hover:text-zinc-300">
+                  Forget password?
+                </Link>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full px-4 py-3 bg-zinc-800 text-zinc-200 rounded-lg hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:ring-offset-2 focus:ring-offset-zinc-900 transition-colors"
+            >
+              Login
+            </button>
+          </form>
+
+          <div className="text-center text-sm">
+            <span className="text-zinc-500">Doesn't have an account? </span>
+            <Link href="/signup" className="text-zinc-400 hover:text-zinc-300 font-medium">
+              Sign Up for free
+            </Link>
+          </div>
+
+          <div className="text-center">
+            <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-400 flex items-center justify-center gap-1">
+              skip for now
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
