@@ -18,7 +18,7 @@ export default function RightSidebar() {
   ];
 
   return (
-    <div className="h-full px-6 py-2 space-y-4">
+    <div className="h-full px-2 py-2 space-y-4 lg:px-6">
       {/* Search Bar */}
       <div className="sticky top-0 pt-2 pb-4">
         <div className="relative">

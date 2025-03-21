@@ -12,7 +12,7 @@ const MOCK_BLOG_POSTS = [
     title: "使用 React 和 Next.js 建立個人網站",
     description:
       "這篇文章分享了如何使用 React 和 Next.js 框架來建立現代化的個人網站，包含了響應式設計和深色模式。",
-    coverImage: "/images/blog/nextjs-cover.jpg",
+    coverImage: "https://placehold.co/600x400/1a1a1a/ffffff/png?text=React+%26+Next.js",
     date: "2025-03-15",
     readingTime: "5 min",
     views: 256,
@@ -23,7 +23,7 @@ const MOCK_BLOG_POSTS = [
     title: "UI/UX 設計的基本原則",
     description:
       "探討現代 UI/UX 設計的關鍵原則，以及如何在你的項目中應用這些原則來提升用戶體驗。",
-    coverImage: "/images/blog/uiux-cover.jpg",
+    coverImage: "https://placehold.co/600x400/1a1a1a/ffffff/png?text=UI%2FUX+Design",
     date: "2025-03-01",
     readingTime: "8 min",
     views: 189,
@@ -34,7 +34,7 @@ const MOCK_BLOG_POSTS = [
     title: "JavaScript 的進階概念",
     description:
       "深入了解 JavaScript 的進階概念，如閉包、原型鏈、異步編程，幫助你提升你的前端開發技能。",
-    coverImage: "/images/blog/javascript-cover.jpg",
+    coverImage: "https://placehold.co/600x400/1a1a1a/ffffff/png?text=JavaScript",
     date: "2025-02-20",
     readingTime: "10 min",
     views: 342,
@@ -103,7 +103,7 @@ export default function BlogListPage() {
           <p className="text-xl text-zinc-400">沒有找到符合條件的文章</p>
         </div>
       ) : (
-        <div className="space-y-6 mt-6">
+        <div className="space-y-6 mt-2 md:mt-6">
           {filteredPosts.map((post) => (
             <Link
               href={`/blog/${post.title.toLowerCase().replace(/\\s+/g, "-")}`}
@@ -111,14 +111,12 @@ export default function BlogListPage() {
               className="block"
             >
               <article className="border-b border-zinc-800 pb-6 last:border-0">
-                {post.coverImage && (
-                  <div className="aspect-video rounded-lg overflow-hidden mb-4">
-                    <div
-                      className="w-full h-full bg-center bg-cover"
-                      style={{ backgroundImage: `url(${post.coverImage})` }}
-                    />
-                  </div>
-                )}
+                <div className="aspect-video rounded-lg overflow-hidden mb-4">
+                  <div
+                    className="w-full h-full bg-center bg-cover"
+                    style={{ backgroundImage: `url("${post.coverImage || 'https://placehold.co/600x400@2x.png'}")` }}
+                  />
+                </div>
 
                 <h2 className="text-xl font-semibold text-zinc-100 mb-2 hover:text-zinc-300 transition-colors">
                   {post.title}
