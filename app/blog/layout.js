@@ -20,7 +20,7 @@ export default function BlogLayout({ children }) {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 w-full md:max-w-[600px] xl:max-w-[600px] border-x border-zinc-800">
-          <div className="px-6 pt-8">
+          <div className="px-2 md:px-6 pt-8">
             {children}
           </div>
         </main>

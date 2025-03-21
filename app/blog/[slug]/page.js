@@ -236,7 +236,7 @@ Here's a sentence with a footnote[^1].
   };
 
   return (
-    <article className="max-w-4xl mx-auto px-4 py-8">
+    <article className="max-w-4xl mx-auto px-2 md:px-4 py-8">
       <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
       <div className="text-zinc-400 mb-8">
         {new Date(post.date).toLocaleDateString()}
