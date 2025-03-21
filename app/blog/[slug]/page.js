@@ -241,7 +241,7 @@ Here's a sentence with a footnote[^1].
       <div className="text-zinc-400 mb-8">
         {new Date(post.date).toLocaleDateString()}
       </div>
-      <div className="prose prose-invert max-w-none">
+      <div className="prose prose-invert max-w-none overflow-x-auto">
         <MDEditor.Markdown 
           source={post.content} 
           style={customStyles.preview}
