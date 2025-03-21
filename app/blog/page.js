@@ -77,7 +77,7 @@ export default function BlogListPage() {
   return (
     <div className="px-4 py-8">
       {/* Search bar */}
-      <div className="sticky top-16 bg-black/50 backdrop-blur-sm py-4 z-10">
+      <div className="sticky top-16 py-4 z-10">
         <div className="relative">
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400"

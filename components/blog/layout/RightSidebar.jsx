@@ -20,7 +20,7 @@ export default function RightSidebar() {
   return (
     <div className="h-full px-6 py-2 space-y-4">
       {/* Search Bar */}
-      <div className="sticky top-0 pt-2 pb-4 bg-black">
+      {/* <div className="sticky top-0 pt-2 pb-4 bg-black">
         <div className="relative">
           <input
             type="text"
@@ -29,7 +29,7 @@ export default function RightSidebar() {
           />
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-zinc-400" size={18} />
         </div>
-      </div>
+      </div> */}
 
       {/* Trending Topics */}
       <div className="bg-zinc-900 rounded-2xl overflow-hidden">
