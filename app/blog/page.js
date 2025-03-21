@@ -95,7 +95,7 @@ export default function BlogListPage() {
 
       {/* Blog post list */}
       {isLoading ? (
-        <div className="flex justify-center items-center min-h-[300px]">
+        <div className="flex justify-center items-center min-h-[300px] mt-6 md:mt-8">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-zinc-300"></div>
         </div>
       ) : filteredPosts.length === 0 ? (
