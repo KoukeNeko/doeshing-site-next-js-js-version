@@ -75,7 +75,7 @@ export default function BlogListPage() {
   const allTags = [...new Set(blogPosts.flatMap((post) => post.tags))].sort();
 
   return (
-    <div className="px-4 py-8">
+    <div>
       {/* Search bar */}
       {/* <div className="sticky top-16 py-4 z-10">
         <div className="relative">
@@ -103,7 +103,7 @@ export default function BlogListPage() {
           <p className="text-xl text-zinc-400">沒有找到符合條件的文章</p>
         </div>
       ) : (
-        <div className="space-y-6 mt-2 md:mt-6">
+        <div className="space-y-6 mt-6 md:mt-8">
           {filteredPosts.map((post) => (
             <Link
               href={`/blog/${post.title.toLowerCase().replace(/\\s+/g, "-")}`}

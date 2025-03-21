@@ -36,14 +36,14 @@ export default function MobileNav() {
       {/* 遮罩層 */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 md:hidden"
+          className="fixed inset-0 bg-zinc-950/20 backdrop-blur-sm z-50 md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* 側邊選單 */}
       <div
-        className={`fixed top-0 left-0 w-[280px] h-full bg-black border-r border-zinc-800 transform transition-transform duration-300 ease-in-out z-50 md:hidden ${
+        className={`fixed top-0 left-0 w-[280px] h-full bg-black/50 backdrop-blur-sm  border-r border-zinc-800 transform transition-transform duration-300 ease-in-out z-50 md:hidden ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
