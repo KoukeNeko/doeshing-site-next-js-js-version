@@ -96,74 +96,7 @@ export default function LoginPage() {
             Login with Google
           </button>
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-zinc-800"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-zinc-950 text-zinc-500">or</span>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-zinc-300">
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                placeholder="example@gmail.com"
-                className="mt-1 block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-700 text-zinc-100 placeholder-zinc-500"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-zinc-300">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-700 text-zinc-100"
-                  required
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-500 hover:text-zinc-400"
-                >
-                  👁️
-                </button>
-              </div>
-              <div className="flex justify-end mt-2">
-                <Link href="/forgot-password" className="text-sm text-zinc-400 hover:text-zinc-300">
-                  Forget password?
-                </Link>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full px-4 py-3 bg-zinc-800 text-zinc-200 rounded-lg hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:ring-offset-2 focus:ring-offset-zinc-900 transition-colors"
-            >
-              Login
-            </button>
-          </form>
-
-          <div className="text-center text-sm">
-            <span className="text-zinc-500">Doesn&apos;t have an account? </span>
-            <Link href="/signup" className="text-zinc-400 hover:text-zinc-300 font-medium">
-              Sign Up for free
-            </Link>
-          </div>
+          
 
           <div className="text-center">
             <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-400 flex items-center justify-center gap-1">
