@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
@@ -86,9 +86,9 @@ function UserCard({ session }) {
           </div>
         </div>
         <button 
-          onClick={() => {
+          onClick={async () => {
             console.log('Logging out...');
-            router.push('/api/auth/signout');
+            await signOut({ redirect: true, callbackUrl: '/login' });
           }}
           className="mt-4 w-full px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-sm transition-colors"
         >
