@@ -15,12 +15,13 @@ export default function LoginPage() {
     console.log("Session data:", session);
   }, [session, status]);
 
-  // If user is already logged in, redirect to home page
-  if (session) {
-    console.log("User already logged in, redirecting...");
-    router.push("/");
-    return null;
-  }
+  // If user is already logged in, redirect to dashboard
+  useEffect(() => {
+    if (session) {
+      console.log("User already logged in, redirecting to dashboard...");
+      router.push("/dashboard");
+    }
+  }, [session, router]);
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
@@ -28,7 +29,7 @@ export default function LoginPage() {
     
     try {
       const result = await signIn("google", { 
-        callbackUrl: "/",
+        callbackUrl: "/dashboard",
         redirect: true,
       });
       console.log("Login result:", result);
@@ -37,6 +38,15 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  // Show loading state while checking session
+  if (status === 'loading') {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-8 h-8 border-4 border-zinc-300 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-7xl h-full flex flex-1">
