@@ -86,9 +86,12 @@ function UserCard({ session }) {
           </div>
         </div>
         <button 
-          onClick={async () => {
+          onClick={() => {
             console.log('Logging out...');
-            await signOut({ redirect: true, callbackUrl: '/login' });
+            signOut({ 
+              callbackUrl: '/login',
+              redirect: true 
+            });
           }}
           className="mt-4 w-full px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md text-sm transition-colors"
         >
