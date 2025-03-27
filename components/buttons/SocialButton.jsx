@@ -15,8 +15,6 @@ const SocialButton = ({ icon: Icon, href, isMobile, onHoverChange }) => {
           }
         `}
           target="_blank"
-          onMouseEnter={() => onHoverChange(true)}
-          onMouseLeave={() => onHoverChange(false)}
         >
           <Icon size={isMobile ? 30 : 24} className="text-white" />
         </Button>
