@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { FileText, Settings, Users, Server } from 'lucide-react';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -42,6 +43,35 @@ export default function DashboardPage() {
       <div className="space-y-2">
         <h1 className="text-2xl font-bold">歡迎回來，{session?.user?.name}！</h1>
         <p className="text-zinc-400">這裡是您的個人儀表板，您可以管理您的文章和設定。</p>
+      </div>
+
+      {/* 快速訪問卡片 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Link href="/dashboard/posts" className="flex flex-col p-6 bg-zinc-900/50 rounded-lg hover:bg-zinc-900 transition-colors">
+          <div className="flex items-center gap-3 mb-3">
+            <FileText className="text-zinc-400" />
+            <h2 className="text-lg font-semibold">我的文章</h2>
+          </div>
+          <p className="text-zinc-500 text-sm mb-2">管理您的所有文章、草稿和發布狀態</p>
+        </Link>
+        
+        <Link href="/dashboard/settings" className="flex flex-col p-6 bg-zinc-900/50 rounded-lg hover:bg-zinc-900 transition-colors">
+          <div className="flex items-center gap-3 mb-3">
+            <Settings className="text-zinc-400" />
+            <h2 className="text-lg font-semibold">帳號設定</h2>
+          </div>
+          <p className="text-zinc-500 text-sm mb-2">更新您的個人資料和偏好設定</p>
+        </Link>
+        
+        {session?.user?.isAdmin && (
+          <Link href="/dashboard/admin" className="flex flex-col p-6 bg-zinc-900/50 rounded-lg hover:bg-zinc-900 transition-colors">
+            <div className="flex items-center gap-3 mb-3">
+              <Server className="text-zinc-400" />
+              <h2 className="text-lg font-semibold">管理員控制台</h2>
+            </div>
+            <p className="text-zinc-500 text-sm mb-2">管理網站、用戶和內容</p>
+          </Link>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
