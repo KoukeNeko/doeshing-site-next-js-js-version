@@ -15,11 +15,22 @@ export default function LoginPage() {
     console.log("Session data:", session);
   }, [session, status]);
 
-  // If user is already logged in, redirect to dashboard
+  // 檢查用戶狀態並進行適當的重定向
   useEffect(() => {
     if (session) {
-      console.log("User already logged in, redirecting to dashboard...");
-      router.push("/dashboard");
+      // 檢查是否為管理員用戶
+      const isAdmin = session.user.isAdmin || session.user.role === 'admin';
+      console.log("User authenticated:", session.user.email, "isAdmin:", isAdmin);
+      
+      // 管理員直接進入儀表板
+      if (isAdmin) {
+        console.log("Admin user detected, redirecting to dashboard...");
+        router.push("/dashboard");
+      } else {
+        // 一般用戶重定向到首頁或其他頁面
+        console.log("Regular user detected, redirecting to homepage...");
+        router.push("/");
+      }
     }
   }, [session, router]);
 
