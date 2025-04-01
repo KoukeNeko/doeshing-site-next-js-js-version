@@ -38,7 +38,7 @@ export default function MyPostsPage() {
     setIsLoading(true);
     try {
       const statusParam = status && status !== 'all' ? `&status=${status}` : '';
-      const response = await fetch(`/api/posts/my?page=${page}&limit=10${statusParam}`);
+      const response = await fetch(`/api/posts/?page=${page}&limit=10${statusParam}`);
       
       if (!response.ok) {
         throw new Error(`Failed to fetch posts: ${response.statusText}`);
