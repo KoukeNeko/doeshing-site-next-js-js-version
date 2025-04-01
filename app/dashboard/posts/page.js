@@ -237,7 +237,7 @@ export default function MyPostsPage() {
                   </td>
                   <td className="py-3 px-4">
                     <div className="flex justify-end gap-2">
-                      <Link href={`/blog/${post.id}`} className="p-1 text-zinc-400 hover:text-zinc-200">
+                      <Link href={`/blog?id=${post.id}`} className="p-1 text-zinc-400 hover:text-zinc-200">
                         <Eye size={18} />
                       </Link>
                       <Link href={`/dashboard/posts/edit/${post.id}`} className="p-1 text-zinc-400 hover:text-zinc-200">
