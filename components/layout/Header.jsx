@@ -241,7 +241,11 @@ export default function Header() {
               {userMenuItems.map((item, index) => (
                 item.href ? (
                   <DropdownMenuItem key={`user-${index}`} asChild>
-                    <Link href={item.href}>
+                    <Link 
+                      href={item.href}
+                      target={item.isExternal ? "_blank" : undefined}
+                      rel={item.isExternal ? "noopener noreferrer" : undefined}
+                    >
                       {item.icon}
                       {item.label}
                     </Link>
