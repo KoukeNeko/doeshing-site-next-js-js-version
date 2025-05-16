@@ -76,6 +76,46 @@ export default function Header() {
     return translations[key] || key;
   };
 
+  // Navigation items - centralized to avoid duplication
+  const navItems = [
+    {
+      href: "https://blog.doeshing.site",
+      icon: <ReceiptText className="mr-2" size={16} />,
+      label: t("blog"),
+      active: false, // external link won't be active in the current app
+      isExternal: true,
+    },
+    {
+      href: "/projects",
+      icon: <Code className="mr-2" size={16} />,
+      label: t("project"),
+      active: pathname?.startsWith("/projects"),
+    },
+    {
+      href: "/about",
+      icon: <Signature className="mr-2" size={16} />,
+      label: t("about"),
+      active: pathname?.startsWith("/about"),
+    },
+  ];
+
+  // User menu items - centralized to avoid duplication
+  const userMenuItems = [
+    {
+      href: isAuthed ? "/profile" : "/login",
+      icon: <User2Icon className="mr-2" size={16} />,
+      label: isAuthed ? t("profile") : t("login"),
+    },
+  ];
+
+  if (isAuthed) {
+    userMenuItems.push({
+      onClick: handleLogout,
+      icon: <DoorOpen className="mr-2" size={16} />,
+      label: t("logout"),
+    });
+  }
+
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-zinc-950/20 backdrop-blur-sm border-b border-zinc-800/50 z-50">
       <div className="h-full flex justify-between items-center max-w-7xl mx-auto px-4">
@@ -116,48 +156,25 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-4">
-          <Button
-            variant="link"
-            className={`text-zinc-400 ${
-              pathname?.startsWith("/blog")
-                ? "underline underline-offset-4"
-                : ""
-            }`}
-            asChild
-          >
-            <Link href="/blog">
-              <ReceiptText className="mr-2" size={16} />
-              {t("blog")}
-            </Link>
-          </Button>
-          <Button
-            variant="link"
-            className={`text-zinc-400 ${
-              pathname?.startsWith("/projects")
-                ? "underline underline-offset-4"
-                : ""
-            }`}
-            asChild
-          >
-            <Link href="/projects">
-              <Code className="mr-2" size={16} />
-              {t("project")}
-            </Link>
-          </Button>
-          <Button
-            variant="link"
-            className={`text-zinc-400 ${
-              pathname?.startsWith("/about")
-                ? "underline underline-offset-4"
-                : ""
-            }`}
-            asChild
-          >
-            <Link href="/about">
-              <Signature className="mr-2" size={16} />
-              {t("about")}
-            </Link>
-          </Button>
+          {navItems.map((item, index) => (
+            <Button
+              key={index}
+              variant="link"
+              className={`text-zinc-400 ${
+                item.active ? "underline underline-offset-4" : ""
+              }`}
+              asChild
+            >
+              <Link 
+                href={item.href}
+                target={item.isExternal ? "_blank" : undefined}
+                rel={item.isExternal ? "noopener noreferrer" : undefined}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            </Button>
+          ))}
 
           {/* User Menu */}
           <DropdownMenu>
@@ -177,20 +194,21 @@ export default function Header() {
               align="end"
               className="w-56 bg-zinc-900/80 backdrop-blur-sm border-zinc-800/50 text-zinc-400"
             >
-              {/* Profile Section */}
-              <DropdownMenuItem asChild>
-                <Link href={isAuthed ? "/profile" : "/login"}>
-                  <User2Icon className="mr-2" size={16} />
-                  {isAuthed ? t("profile") : t("login")}
-                </Link>
-              </DropdownMenuItem>
-
-              {isAuthed && (
-                <DropdownMenuItem onClick={handleLogout}>
-                  <DoorOpen className="mr-2" size={16} />
-                  {t("logout")}
-                </DropdownMenuItem>
-              )}
+              {userMenuItems.map((item, index) => (
+                item.href ? (
+                  <DropdownMenuItem key={index} asChild>
+                    <Link href={item.href}>
+                      {item.icon}
+                      {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem key={index} onClick={item.onClick}>
+                    {item.icon}
+                    {item.label}
+                  </DropdownMenuItem>
+                )
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
@@ -207,39 +225,34 @@ export default function Header() {
               align="end"
               className="w-56 bg-zinc-900/80 backdrop-blur-sm border-zinc-800/50 text-zinc-400"
             >
-              <DropdownMenuItem asChild>
-                <Link href="/blog">
-                  <ReceiptText className="mr-2" size={16} />
-                  {t("blog")}
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/projects">
-                  <Code className="mr-2" size={16} />
-                  {t("project")}
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/about">
-                  <Signature className="mr-2" size={16} />
-                  {t("about")}
-                </Link>
-              </DropdownMenuItem>
-
-              {/* Profile Section */}
-              <DropdownMenuItem asChild>
-                <Link href={isAuthed ? "/profile" : "/login"}>
-                  <User2Icon className="mr-2" size={16} />
-                  {isAuthed ? t("profile") : t("login")}
-                </Link>
-              </DropdownMenuItem>
-
-              {isAuthed && (
-                <DropdownMenuItem onClick={handleLogout}>
-                  <DoorOpen className="mr-2" size={16} />
-                  {t("logout")}
+              {navItems.map((item, index) => (
+                <DropdownMenuItem key={index} asChild>
+                  <Link 
+                    href={item.href}
+                    target={item.isExternal ? "_blank" : undefined}
+                    rel={item.isExternal ? "noopener noreferrer" : undefined}
+                  >
+                    {item.icon}
+                    {item.label}
+                  </Link>
                 </DropdownMenuItem>
-              )}
+              ))}
+
+              {userMenuItems.map((item, index) => (
+                item.href ? (
+                  <DropdownMenuItem key={`user-${index}`} asChild>
+                    <Link href={item.href}>
+                      {item.icon}
+                      {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem key={`user-${index}`} onClick={item.onClick}>
+                    {item.icon}
+                    {item.label}
+                  </DropdownMenuItem>
+                )
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
