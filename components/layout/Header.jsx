@@ -160,9 +160,7 @@ export default function Header() {
             <Button
               key={index}
               variant="link"
-              className={`text-zinc-400 ${
-                item.active ? "underline underline-offset-4" : ""
-              }`}
+              className={`text-zinc-400 ${item.active ? "underline underline-offset-4" : ""}`}
               asChild
             >
               <Link 

@@ -178,3 +178,43 @@
 .wmde-markdown {
   color: inherit;
 }
+
+/* Underline animation */
+.link-underline {
+  @apply relative;
+}
+
+.link-underline::after {
+  @apply absolute bottom-0 left-0 h-[2px] w-0 transition-all duration-300 content-[''];
+}
+
+.link-underline:hover::after {
+  @apply w-full;
+}
+
+/* Blue variant */
+.link-underline-blue {
+  @apply text-blue-400 hover:text-blue-300;
+}
+
+.link-underline-blue::after {
+  @apply bg-blue-300;
+}
+
+/* Gray variant */
+.link-underline-gray {
+  @apply text-gray-400 hover:text-gray-300;
+}
+
+.link-underline-gray::after {
+  @apply bg-gray-300;
+}
+
+/* White variant for navigation */
+.link-underline-nav {
+  @apply text-zinc-400;
+}
+
+.link-underline-nav::after {
+  @apply bg-zinc-300;
+}
