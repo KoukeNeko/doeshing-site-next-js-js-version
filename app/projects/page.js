@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import ProjectImagePlaceholder from "@/components/ui/ProjectImagePlaceholder";
 import TitleBar from "@/components/layout/TitleBar";
 
 const projects = [
@@ -10,7 +9,7 @@ const projects = [
     title: "UI-for-ADB-Cross-Platform",
     description:
       "A cross-platform user interface for Android Debug Bridge (ADB), making Android device management easier",
-    image: "/projects/ui-for-adb.png",
+    // image: "/projects/ui-for-adb.png",
     tags: ["JavaScript", "Cross-Platform", "ADB", "UI"],
     link: "https://github.com/KoukeNeko/UI-for-ADB-Cross-Platform",
     demo: null,
@@ -19,7 +18,7 @@ const projects = [
     title: "OPass with Jetpack Compose",
     description:
       "A modern Android app built with Jetpack Compose for conference management",
-    image: "/projects/opass.png",
+    // image: "/projects/opass.png",
     tags: ["Kotlin", "Jetpack Compose", "Android", "Material Design"],
     link: "https://github.com/KoukeNeko/OPass-with-jetpack-compose",
     demo: null,
@@ -28,7 +27,7 @@ const projects = [
     title: "NYUST IoV NMEA Maps",
     description:
       "A web application for analyzing and visualizing GPS data in vehicle networks",
-    image: "/projects/nmea-maps.png",
+    // image: "/projects/nmea-maps.png",
     tags: ["Kotlin", "Maps", "GPS", "IoV"],
     link: "https://github.com/KoukeNeko/NYUST_HW_IoV_NMEA_maps",
     demo: "https://nyust-iov-nmea-maps.web.app",
@@ -37,7 +36,7 @@ const projects = [
     title: "Personal Portfolio",
     description:
       "My personal portfolio website built with Next.js and TailwindCSS",
-    image: "/projects/portfolio.png",
+    // image: "/projects/portfolio.png",
     tags: ["Next.js", "TailwindCSS", "React", "Framer Motion"],
     link: "https://github.com/KoukeNeko/doeshing-site-next-js",
     demo: "https://doeshing.site",
@@ -89,17 +88,13 @@ export default function Projects() {
                 className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden hover:bg-white/10 transition-all duration-300"
               >
                 <div className="aspect-video relative overflow-hidden">
-                  {project.image ? (
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                      priority={index < 2}
-                    />
-                  ) : (
-                    <ProjectImagePlaceholder title={project.title} />
-                  )}
+                  <Image
+                    src={project.image || `https://placehold.co/600x400/transparent/white?text=${project.title}`}
+                    alt={project.title}
+                    fill
+                    className="object-cover"
+                    priority={index < 2}
+                  />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-semibold mb-2">
