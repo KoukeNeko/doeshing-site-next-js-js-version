@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 import {
   Briefcase,
   GraduationCap,
@@ -25,12 +26,10 @@ import { ProfileHeader } from "@/components/card/ProfileHeader";
 import { ProfileData } from "../../data/ProfileData";
 
 export default function AboutPage() {
-
   const profile = ProfileData;
   
   // 定義需要的函數
   const t = (key) => {
-
     const translations = {
       'aboutMe': '關於我',
       'whoAmI': '我是誰',
@@ -54,234 +53,299 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="container max-w-6xl mx-auto px-4 py-8">
-      <TitleBar 
-        title={t('aboutMe')}
-        subtitle={t('whoAmI')}
-      />
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="container max-w-6xl mx-auto px-4 py-8"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <TitleBar 
+          title={t('aboutMe')}
+          subtitle={t('whoAmI')}
+        />
+      </motion.div>
 
-      <ProfileHeader
-        avatar={profile.avatar}
-        name={profile.name}
-        role={profile.role}
-        location={profile.location}
-        connections={profile.connections}
-      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <ProfileHeader
+          avatar={profile.avatar}
+          name={profile.name}
+          role={profile.role}
+          location={profile.location}
+          connections={profile.connections}
+        />
+      </motion.div>
 
       {/* 關於我 */}
-      <ProfileCard 
-        icon={Signature} 
-        title={t('about')}
-        section="about"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <p className="text-zinc-400 whitespace-pre-line">
-          {profile.about}
-        </p>
-      </ProfileCard>
+        <ProfileCard 
+          icon={Signature} 
+          title={t('about')}
+          section="about"
+        >
+          <p className="text-zinc-400 whitespace-pre-line">
+            {profile.about}
+          </p>
+        </ProfileCard>
+      </motion.div>
 
       {/* 工作經驗 */}
-      <ProfileCard 
-        icon={Briefcase} 
-        title={t('experience')}
-        section="experience"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
       >
-        {profile.experience.map((exp, index) => (
-          <ProfileItem
-            key={index}
-            icon={Briefcase}
-            title={exp.title}
-            subtitle={exp.company}
-            period={exp.period}
-            location={exp.location}
-            description={exp.description}
-            section="experience"
-          />
-        ))}
-      </ProfileCard>
+        <ProfileCard 
+          icon={Briefcase} 
+          title={t('experience')}
+          section="experience"
+        >
+          {profile.experience.map((exp, index) => (
+            <ProfileItem
+              key={index}
+              icon={Briefcase}
+              title={exp.title}
+              subtitle={exp.company}
+              period={exp.period}
+              location={exp.location}
+              description={exp.description}
+              section="experience"
+            />
+          ))}
+        </ProfileCard>
+      </motion.div>
 
       {/* 教育背景 */}
-      <ProfileCard 
-        icon={GraduationCap} 
-        title={t('education')}
-        section="education"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
       >
-        {profile.education.map((edu, index) => (
-          <ProfileItem
-            key={index}
-            icon={GraduationCap}
-            title={edu.school}
-            subtitle={`${edu.degree} · ${edu.field}`}
-            period={edu.period}
-            section="education"
-            extra={
-              <>
-                {edu.skills && edu.skills.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-sm font-medium text-zinc-300">{t('skills')}</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {edu.skills.map((skill, i) => (
-                        <span key={i} className="text-xs px-2 py-1 bg-zinc-800 text-zinc-300 rounded">
-                          {skill}
-                        </span>
-                      ))}
+        <ProfileCard 
+          icon={GraduationCap} 
+          title={t('education')}
+          section="education"
+        >
+          {profile.education.map((edu, index) => (
+            <ProfileItem
+              key={index}
+              icon={GraduationCap}
+              title={edu.school}
+              subtitle={`${edu.degree} · ${edu.field}`}
+              period={edu.period}
+              section="education"
+              extra={
+                <>
+                  {edu.skills && edu.skills.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-sm font-medium text-zinc-300">{t('skills')}</p>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {edu.skills.map((skill, i) => (
+                          <span key={i} className="text-xs px-2 py-1 bg-zinc-800 text-zinc-300 rounded">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-                {edu.achievements && edu.achievements.length > 0 && (
-                  <div className="mt-3">
-                    <p className="text-sm font-medium text-zinc-300">{t('achievements')}</p>
-                    <ul className="mt-1 space-y-1">
-                      {edu.achievements.map((achievement, i) => (
-                        <li key={i} className="text-sm text-zinc-400 flex items-start">
-                          <CheckCircle size={14} className="mr-1 mt-1 text-emerald-500 flex-shrink-0" />
-                          <span>{achievement}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </>
-            }
-          />
-        ))}
-      </ProfileCard>
+                  )}
+                  {edu.achievements && edu.achievements.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-sm font-medium text-zinc-300">{t('achievements')}</p>
+                      <ul className="mt-1 space-y-1">
+                        {edu.achievements.map((achievement, i) => (
+                          <li key={i} className="text-sm text-zinc-400 flex items-start">
+                            <CheckCircle size={14} className="mr-1 mt-1 text-emerald-500 flex-shrink-0" />
+                            <span>{achievement}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </>
+              }
+            />
+          ))}
+        </ProfileCard>
+      </motion.div>
 
       {/* 證照與認證 */}
-      <ProfileCard 
-        icon={Award} 
-        title={t('licensesAndCerts')}
-        section="certification"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
       >
-        {profile.certifications.map((cert, index) => (
-          <ProfileItem
-            key={index}
-            icon={Award}
-            title={cert.name}
-            subtitle={cert.issuer}
-            period={`${t('issuedOn')} ${cert.issue_date || cert.issued}${cert.expired_date ? ` · ${t('expiresOn')} ${cert.expired_date}` : ''}`}
-            section="certification"
-            extra={
-              <>
-                {cert.credential_id && (
-                  <p className="text-sm text-zinc-500">
-                    {t('credentialNo')}{cert.credential_id}
-                  </p>
-                )}
-                {(cert.credential_url || cert.link) && (
-                  <Link 
-                    href={cert.credential_url || cert.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-block mt-2 text-xs text-neutral-700 px-2 py-1 border border-neutral-700 rounded hover:bg-neutral-100"
-                  >
-                    {t('seeCredential')}
-                    <ExternalLink size={12} className="ml-1 inline" />
-                  </Link>
-                )}
-              </>
-            }
-          />
-        ))}
-      </ProfileCard>
+        <ProfileCard 
+          icon={Award} 
+          title={t('licensesAndCerts')}
+          section="certification"
+        >
+          {profile.certifications.map((cert, index) => (
+            <ProfileItem
+              key={index}
+              icon={Award}
+              title={cert.name}
+              subtitle={cert.issuer}
+              period={`${t('issuedOn')} ${cert.issue_date || cert.issued}${cert.expired_date ? ` · ${t('expiresOn')} ${cert.expired_date}` : ''}`}
+              section="certification"
+              extra={
+                <>
+                  {cert.credential_id && (
+                    <p className="text-sm text-zinc-500">
+                      {t('credentialNo')}{cert.credential_id}
+                    </p>
+                  )}
+                  {(cert.credential_url || cert.link) && (
+                    <Link 
+                      href={cert.credential_url || cert.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-block mt-2 text-xs text-neutral-700 px-2 py-1 border border-neutral-700 rounded hover:bg-neutral-100"
+                    >
+                      {t('seeCredential')}
+                      <ExternalLink size={12} className="ml-1 inline" />
+                    </Link>
+                  )}
+                </>
+              }
+            />
+          ))}
+        </ProfileCard>
+      </motion.div>
 
       {/* 志願服務 */}
-      <ProfileCard 
-        icon={Calendar} 
-        title={t('volunteerExp')}
-        section="volunteer"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
       >
-        {profile.volunteer.map((vol, index) => (
-          <ProfileItem
-            key={index}
-            icon={Calendar}
-            title={vol.role}
-            subtitle={vol.organization}
-            period={vol.period}
-            description={vol.description}
-            section="volunteer"
-          />
-        ))}
-      </ProfileCard>
+        <ProfileCard 
+          icon={Calendar} 
+          title={t('volunteerExp')}
+          section="volunteer"
+        >
+          {profile.volunteer.map((vol, index) => (
+            <ProfileItem
+              key={index}
+              icon={Calendar}
+              title={vol.role}
+              subtitle={vol.organization}
+              period={vol.period}
+              description={vol.description}
+              section="volunteer"
+            />
+          ))}
+        </ProfileCard>
+      </motion.div>
 
       {/* 專案經驗 */}
-      <ProfileCard 
-        icon={Code} 
-        title={t('projects')}
-        section="project"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.7 }}
       >
-        {profile.projects.map((project, index) => (
-          <ProfileItem
-            key={index}
-            icon={Code}
-            title={project.name}
-            period={project.period}
-            description={project.description}
-            section="project"
-            extra={
-              <>
-                {project.technologies && project.technologies.length > 0 && (
-                  <div className="mt-2">
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {project.technologies.map((tech, i) => (
-                        <span key={i} className="text-xs px-2 py-1 bg-zinc-800 text-zinc-300 rounded">
-                          {tech}
-                        </span>
-                      ))}
+        <ProfileCard 
+          icon={Code} 
+          title={t('projects')}
+          section="project"
+        >
+          {profile.projects.map((project, index) => (
+            <ProfileItem
+              key={index}
+              icon={Code}
+              title={project.name}
+              period={project.period}
+              description={project.description}
+              section="project"
+              extra={
+                <>
+                  {project.technologies && project.technologies.length > 0 && (
+                    <div className="mt-2">
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {project.technologies.map((tech, i) => (
+                          <span key={i} className="text-xs px-2 py-1 bg-zinc-800 text-zinc-300 rounded">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-                {project.achievements && project.achievements.length > 0 && (
-                  <div className="mt-3">
-                    <ul className="mt-1 space-y-1">
-                      {project.achievements.map((achievement, i) => (
-                        <li key={i} className="text-sm text-zinc-400 flex items-start">
-                          <CheckCircle size={14} className="mr-1 mt-1 text-emerald-500 flex-shrink-0" />
-                          <span>{achievement}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </>
-            }
-          />
-        ))}
-      </ProfileCard>
+                  )}
+                  {project.achievements && project.achievements.length > 0 && (
+                    <div className="mt-3">
+                      <ul className="mt-1 space-y-1">
+                        {project.achievements.map((achievement, i) => (
+                          <li key={i} className="text-sm text-zinc-400 flex items-start">
+                            <CheckCircle size={14} className="mr-1 mt-1 text-emerald-500 flex-shrink-0" />
+                            <span>{achievement}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </>
+              }
+            />
+          ))}
+        </ProfileCard>
+      </motion.div>
 
       {/* 成績 */}
-      <ProfileCard 
-        icon={LucideBookOpen} 
-        title={t('testScores')}
-        section="score"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
       >
-        {profile.scores.map((score, index) => (
-          <ProfileItem
-            key={index}
-            icon={LucideBookOpen}
-            title={score.test}
-            subtitle={`${t('score')} ${score.score}`}
-            period={score.date}
-            section="score"
-          />
-        ))}
-      </ProfileCard>
+        <ProfileCard 
+          icon={LucideBookOpen} 
+          title={t('testScores')}
+          section="score"
+        >
+          {profile.scores.map((score, index) => (
+            <ProfileItem
+              key={index}
+              icon={LucideBookOpen}
+              title={score.test}
+              subtitle={`${t('score')} ${score.score}`}
+              period={score.date}
+              section="score"
+            />
+          ))}
+        </ProfileCard>
+      </motion.div>
 
       {/* 語言能力 */}
-      <ProfileCard 
-        icon={Globe} 
-        title={t('languages')}
-        section="language"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.9 }}
       >
-        {profile.languages.map((lang, index) => (
-          <ProfileItem
-            key={index}
-            icon={Globe}
-            title={lang.name}
-            subtitle={lang.level}
-            section="language"
-          />
-        ))}
-      </ProfileCard>
-    </div>
+        <ProfileCard 
+          icon={Globe} 
+          title={t('languages')}
+          section="language"
+        >
+          {profile.languages.map((lang, index) => (
+            <ProfileItem
+              key={index}
+              icon={Globe}
+              title={lang.name}
+              subtitle={lang.level}
+              section="language"
+            />
+          ))}
+        </ProfileCard>
+      </motion.div>
+    </motion.div>
   );
 }
