@@ -59,8 +59,8 @@ export default function Projects() {
   if (!initialized) return null;
 
   return (
-    <div className="w-screen min-h-dvh relative flex justify-center py-20">
-      <div className="w-full max-w-7xl px-4">
+    <div className="w-screen min-h-dvh relative flex justify-center">
+      <div className="container max-w-6xl mx-auto px-4 py-20">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
