@@ -1,6 +1,6 @@
 "use client";
-import { SessionProvider } from "next-auth/react";
 
+// 空的providers包裝器，將來可以添加真正的providers
 export default function Providers({ children }) {
-  return <SessionProvider>{children}</SessionProvider>;
+  return <>{children}</>;
 } 

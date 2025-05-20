@@ -109,7 +109,7 @@ const TrailingCursor = ({
       targetElement.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', onWindowResize);
     };
-  }, [element, particles, rate, baseImageSrc]);
+  }, [element, particles, rate, baseImageSrc, Particle]);
   return null;
 };
 export default TrailingCursor;

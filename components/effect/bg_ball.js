@@ -101,7 +101,7 @@ export default function BgBall() {
     return () => {
       container.remove(); // 從 DOM 中移除容器
     };
-  }, []); // 空依賴陣列意味著效果只在元件掛載時執行一次
+  }, [isMobile]); // 添加 isMobile 作為依賴項，當螢幕尺寸改變時重新創建球體
 
   return null; // 元件本身不渲染任何內容
 }
