@@ -115,7 +115,7 @@ export default function Projects() {
                         href={project.demo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-400 hover:text-blue-300 transition-colors"
+                        className="text-blue-400 hover:text-blue-300 transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-blue-300 after:transition-all hover:after:w-full"
                       >
                         Live Demo
                       </a>
@@ -125,7 +125,7 @@ export default function Projects() {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-gray-300 transition-colors"
+                        className="text-gray-400 hover:text-gray-300 transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-gray-300 after:transition-all hover:after:w-full"
                       >
                         Source Code
                       </a>
