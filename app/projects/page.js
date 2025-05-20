@@ -84,8 +84,8 @@ export default function Projects() {
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-                className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden hover:bg-white/10 transition-all duration-300"
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden hover:bg-white/10 transition-all duration-300 flex flex-col"
               >
                 <div className="aspect-video relative overflow-hidden">
                   <Image
@@ -96,10 +96,8 @@ export default function Projects() {
                     priority={index < 2}
                   />
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">
-                    {project.title}
-                  </h3>
+                <div className="p-6 flex flex-col flex-grow">
+                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
                   <p className="text-gray-400 mb-4">{project.description}</p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.map((tag, tagIndex) => (
@@ -111,7 +109,7 @@ export default function Projects() {
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-4">
+                  <div id="project-links" className="flex gap-4 mt-auto">
                     {project.demo && (
                       <a
                         href={project.demo}
