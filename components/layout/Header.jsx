@@ -158,37 +158,11 @@ export default function Header() {
 
           {/* User Menu */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="link" className="text-zinc-400 p-2">
-                {isAuthed ? (
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={userPicture} alt={userName} />
-                    <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                ) : (
-                  <User2Icon size={16} />
-                )}
-              </Button>
-            </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
               className="w-56 bg-zinc-900/80 backdrop-blur-sm border-zinc-800/50 text-zinc-400"
             >
-              {userMenuItems.map((item, index) => (
-                item.href ? (
-                  <DropdownMenuItem key={index} asChild>
-                    <Link href={item.href}>
-                      {item.icon}
-                      {item.label}
-                    </Link>
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem key={index} onClick={item.onClick}>
-                    {item.icon}
-                    {item.label}
-                  </DropdownMenuItem>
-                )
-              ))}
+              
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
@@ -218,25 +192,7 @@ export default function Header() {
                 </DropdownMenuItem>
               ))}
 
-              {userMenuItems.map((item, index) => (
-                item.href ? (
-                  <DropdownMenuItem key={`user-${index}`} asChild>
-                    <Link 
-                      href={item.href}
-                      target={item.isExternal ? "_blank" : undefined}
-                      rel={item.isExternal ? "noopener noreferrer" : undefined}
-                    >
-                      {item.icon}
-                      {item.label}
-                    </Link>
-                  </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem key={`user-${index}`} onClick={item.onClick}>
-                    {item.icon}
-                    {item.label}
-                  </DropdownMenuItem>
-                )
-              ))}
+              
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
