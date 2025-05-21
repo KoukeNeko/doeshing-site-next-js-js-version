@@ -6,7 +6,6 @@ import {
   Signature,
   ReceiptText,
   Code,
-  User2Icon,
   DoorOpen,
 } from "lucide-react";
 import Link from "next/link";
@@ -96,15 +95,6 @@ export default function Header() {
       icon: <Signature className="mr-2" size={16} />,
       label: t("about"),
       active: pathname?.startsWith("/about"),
-    },
-  ];
-
-  // User menu items - centralized to avoid duplication
-  const userMenuItems = [
-    {
-      href: isAuthed ? "/profile" : "/login",
-      icon: <User2Icon className="mr-2" size={16} />,
-      label: isAuthed ? t("profile") : t("login"),
     },
   ];
 
