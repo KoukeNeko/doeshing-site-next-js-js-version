@@ -29,7 +29,7 @@ export default function Home() {
     { icon: LinkedinIcon, href: "https://www.linkedin.com/in/doeshing/" },
     { icon: FileUser, href: "/resume.pdf" },
     { icon: Github, href: "https://github.com/KoukeNeko" },
-    { icon: Mail, href: "mailto:contact@doeshinf.ink" }
+    { icon: Mail, href: "mailto:contact@doeshing.ink" }
   ];
 
   return (
