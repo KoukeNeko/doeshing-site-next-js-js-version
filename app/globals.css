@@ -218,3 +218,11 @@
 .link-underline-nav::after {
   @apply bg-zinc-300;
 }
+
+/* Line clamp utilities for text truncation */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
