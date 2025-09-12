@@ -408,11 +408,10 @@ export default function BlogPage() {
                           className="bg-blue-600 hover:bg-blue-700 text-white"
                         >
                           <a 
-                            href={doc.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
+                            href={`/blog/${doc.configId}`}
                           >
-                            查看原文
+                            <FileText className="h-4 w-4 mr-1" />
+                            閱讀文章
                           </a>
                         </Button>
                         <Button
@@ -420,9 +419,12 @@ export default function BlogPage() {
                           className="bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
                         >
                           <a 
-                            href={`/blog/${doc.configId}`}
+                            href={doc.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
                           >
-                            本地閱讀
+                            <ExternalLink className="h-4 w-4 mr-1" />
+                            HackMD 原文
                           </a>
                         </Button>
                       </div>
