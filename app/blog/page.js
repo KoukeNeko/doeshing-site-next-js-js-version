@@ -69,7 +69,7 @@ export default function BlogPage() {
             content: '', // 暫不載入完整內容以提高效能
             description: note.description || '',
             url: note.url,
-            lastModified: note.updatedAt,
+            lastModified: note.updatedAt || note.createdAt || '2024-01-01T00:00:00.000Z',
             type: 'hackmd',
             tags: note.tags || [],
             featured: false,
@@ -150,19 +150,25 @@ export default function BlogPage() {
     });
   };
 
-  const calculateReadingTime = (content) => {
-    if (!content) return "未知";
+  const calculateReadingTime = (content, description = '', title = '') => {
+    // 如果沒有完整內容，使用描述和標題來估算
+    const textToAnalyze = content || description || title || '';
+    if (!textToAnalyze) return 3;
+    
     // 中文字符數統計
-    const chineseChars = (content.match(/[\u4e00-\u9fff]/g) || []).length;
+    const chineseChars = (textToAnalyze.match(/[\u4e00-\u9fff]/g) || []).length;
     // 英文單詞數統計
-    const englishWords = content.replace(/[\u4e00-\u9fff]/g, '').split(/\s+/).filter(word => word.length > 0).length;
+    const englishWords = textToAnalyze.replace(/[\u4e00-\u9fff]/g, '').split(/\s+/).filter(word => word.length > 0).length;
+    
+    // 如果是描述文字，估算完整文章長度（通常是描述的 8-15 倍）
+    const multiplier = content ? 1 : 12;
     
     // 中文閱讀速度: 約 300-400 字/分鐘，英文: 約 200-250 詞/分鐘
     const chineseReadingSpeed = 350;
     const englishReadingSpeed = 225;
     
-    const chineseTime = chineseChars / chineseReadingSpeed;
-    const englishTime = englishWords / englishReadingSpeed;
+    const chineseTime = (chineseChars * multiplier) / chineseReadingSpeed;
+    const englishTime = (englishWords * multiplier) / englishReadingSpeed;
     
     const totalMinutes = Math.ceil(chineseTime + englishTime);
     return Math.max(1, totalMinutes); // 至少 1 分鐘
@@ -220,39 +226,9 @@ export default function BlogPage() {
               />
             </div>
             
-            {/* 標籤篩選 */}
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-zinc-400" />
-              <span className="text-sm text-zinc-400">標籤篩選:</span>
-              {selectedTags.length > 0 && (
-                <button
-                  onClick={clearAllTags}
-                  className="text-xs text-red-400 hover:text-red-300 underline"
-                >
-                  清除全部
-                </button>
-              )}
-            </div>
+         
             
-            {/* 管理和重新整理按鈕 */}
-            <div className="flex gap-2">
-              <Button
-                onClick={() => window.open('/blog/manage', '_blank')}
-                variant="outline"
-                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 px-4 py-2"
-              >
-                <Settings className="h-4 w-4 mr-2" />
-                管理筆記
-              </Button>
-              <Button
-                onClick={refreshDocuments}
-                disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2"
-              >
-                <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                重新整理
-              </Button>
-            </div>
+            
           </div>
         </div>
 
@@ -417,7 +393,7 @@ export default function BlogPage() {
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
-                            約 {calculateReadingTime(doc.content)} 分鐘閱讀
+                            約 {calculateReadingTime(doc.content, doc.description)} 分鐘閱讀
                           </div>
                         </div>
                       </div>
