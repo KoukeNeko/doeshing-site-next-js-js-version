@@ -143,6 +143,11 @@ export default function BlogDetailPage() {
 
   if (!initialized) return null;
 
+  //debug
+  console.log("Document Config:", docConfig);
+  console.log("Loaded Document:", document);
+  console.log("TOC:", toc);
+
   return (
     <div className="w-screen min-h-dvh relative flex justify-center mt-16">
       <div className="container max-w-6xl mx-auto px-4 py-8">

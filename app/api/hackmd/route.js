@@ -5,7 +5,7 @@ function cleanHackMDComments(content) {
   if (!content || typeof content !== 'string') return content || '';
   
   try {
-    // 移除各種 HackMD 相關的 HTML 註解
+    // 移除各種 HackMD 相關的 HTML 註解和內容
     return content
       // 移除 {%hackmd ...%} 格式的註解
       .replace(/<!--\s*{%hackmd[^%]*%}\s*-->/gi, '')
@@ -15,6 +15,8 @@ function cleanHackMDComments(content) {
       .replace(/<!--\s*dark\s*theme\s*-->/gi, '')
       // 移除其他可能的 HackMD 格式註解
       .replace(/<!--\s*a\s*為[^>]*-->/gi, '')
+      // 移除 tags 行，格式如: ###### tags: `tag1` `tag2` `tag3`
+      .replace(/^#{1,6}\s*tags:\s*(`[^`]*`\s*)*$/gmi, '')
       // 移除空行（由移除註解後可能產生的多餘空行）
       .replace(/\n\s*\n\s*\n/g, '\n\n')
       .trim();
