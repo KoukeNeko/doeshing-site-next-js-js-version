@@ -402,31 +402,21 @@ export default function BlogPage() {
                         </div>
                       </div>
                       
-                      <div className="lg:ml-4 flex flex-col gap-2">
-                        <Button
-                          asChild
-                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                      <div className="lg:ml-4 flex gap-4 mt-auto">
+                        <a 
+                          href={`/blog/${doc.configId}`}
+                          className="link-underline link-underline-blue"
                         >
-                          <a 
-                            href={`/blog/${doc.configId}`}
-                          >
-                            <FileText className="h-4 w-4 mr-1" />
-                            閱讀文章
-                          </a>
-                        </Button>
-                        <Button
-                          asChild
-                          className="bg-transparent border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                          閱讀文章
+                        </a>
+                        <a 
+                          href={doc.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="link-underline link-underline-gray"
                         >
-                          <a 
-                            href={doc.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                          >
-                            <ExternalLink className="h-4 w-4 mr-1" />
-                            HackMD 原文
-                          </a>
-                        </Button>
+                          HackMD 原文
+                        </a>
                       </div>
                     </div>
                   </Card>
