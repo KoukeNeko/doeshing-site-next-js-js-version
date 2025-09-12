@@ -145,7 +145,7 @@ export default function BlogDetailPage() {
 
   return (
     <div className="w-screen min-h-dvh relative flex justify-center mt-16">
-      <div className="container max-w-4xl mx-auto px-4 py-8">
+      <div className="container max-w-6xl mx-auto px-4 py-8">
         {/* 返回按鈕 */}
         <div className="mb-6">
           <Button

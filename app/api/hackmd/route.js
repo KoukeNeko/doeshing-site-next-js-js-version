@@ -1,5 +1,29 @@
 import { NextResponse } from 'next/server';
 
+// 清除 HackMD 相關的 HTML 註解的函數
+function cleanHackMDComments(content) {
+  if (!content || typeof content !== 'string') return content || '';
+  
+  try {
+    // 移除各種 HackMD 相關的 HTML 註解
+    return content
+      // 移除 {%hackmd ...%} 格式的註解
+      .replace(/<!--\s*{%hackmd[^%]*%}\s*-->/gi, '')
+      // 移除包含特定文字的註解（如地球橢球相關）
+      .replace(/<!--[^>]*為地球橢球[^>]*-->/gi, '')
+      // 移除 dark theme 註解
+      .replace(/<!--\s*dark\s*theme\s*-->/gi, '')
+      // 移除其他可能的 HackMD 格式註解
+      .replace(/<!--\s*a\s*為[^>]*-->/gi, '')
+      // 移除空行（由移除註解後可能產生的多餘空行）
+      .replace(/\n\s*\n\s*\n/g, '\n\n')
+      .trim();
+  } catch (error) {
+    console.error('Error cleaning HackMD comments:', error);
+    return content;
+  }
+}
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const noteId = searchParams.get('noteId');
@@ -79,6 +103,9 @@ export async function GET(request) {
       content = await response.text();
     }
 
+    
+    // 清除 HackMD 相關的 HTML 註解
+    content = cleanHackMDComments(content);
     
     // 解析 markdown 內容，提取標題和基本資訊
     const lines = content.split('\n');
