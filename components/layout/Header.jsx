@@ -78,10 +78,10 @@ export default function Header() {
   // Navigation items - centralized to avoid duplication
   const navItems = [
     {
-      href: "https://blog.doeshing.site",
+      href: "/blog",
       icon: <ReceiptText className="mr-2" size={16} />,
       label: t("blog"),
-      active: false, // external link won't be active in the current app
+      active: true, // external link won't be active in the current app
       isExternal: true,
     },
     {
