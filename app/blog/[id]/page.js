@@ -153,14 +153,12 @@ export default function BlogDetailPage() {
       <div className="container max-w-6xl mx-auto px-4 py-8">
         {/* 返回按鈕 */}
         <div className="mb-6">
-          <Button
+          <button
             onClick={() => router.back()}
-            variant="ghost"
-            className="text-zinc-400 hover:text-zinc-200 p-0"
+            className="link-underline link-underline-gray"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            返回文件列表
-          </Button>
+            ← 返回文件列表
+          </button>
         </div>
 
         {loading && (
@@ -246,41 +244,29 @@ export default function BlogDetailPage() {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-4">
                   {toc.length > 0 && (
-                    <Button
+                    <button
                       onClick={() => setShowToc(!showToc)}
-                      size="sm"
-                      variant="outline"
-                      className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                      className="link-underline link-underline-gray"
                     >
-                      <List className="h-4 w-4 mr-1" />
                       目錄 ({toc.length})
-                    </Button>
+                    </button>
                   )}
-                  <Button
+                  <button
                     onClick={copyToClipboard}
-                    size="sm"
-                    variant="outline"
-                    className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                    className="link-underline link-underline-gray"
                   >
-                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                     {copied ? "已複製" : "分享"}
-                  </Button>
-                  <Button
-                    asChild
-                    size="sm"
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  </button>
+                  <a 
+                    href={document.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="link-underline link-underline-blue"
                   >
-                    <a 
-                      href={document.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink className="h-4 w-4 mr-1" />
-                      HackMD 原文
-                    </a>
-                  </Button>
+                    HackMD 原文
+                  </a>
                 </div>
               </div>
             </div>
@@ -482,24 +468,20 @@ export default function BlogDetailPage() {
 
             {/* 頁面底部動作 */}
             <div className="flex justify-between items-center pt-6">
-              <Button
+              <button
                 onClick={() => router.push('/blog')}
-                variant="outline"
-                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                className="link-underline link-underline-gray"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                返回文件列表
-              </Button>
+                ← 返回文件列表
+              </button>
 
-              <Button
+              <button
                 onClick={loadDocument}
-                variant="outline"
-                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+                className="link-underline link-underline-blue"
                 disabled={loading}
               >
-                <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                 重新載入
-              </Button>
+              </button>
             </div>
           </motion.div>
         )}
