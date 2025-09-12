@@ -144,7 +144,7 @@ export default function BlogDetailPage() {
   if (!initialized) return null;
 
   return (
-    <div className="w-screen min-h-dvh relative flex justify-center">
+    <div className="w-screen min-h-dvh relative flex justify-center mt-16">
       <div className="container max-w-4xl mx-auto px-4 py-8">
         {/* 返回按鈕 */}
         <div className="mb-6">
@@ -228,10 +228,6 @@ export default function BlogDetailPage() {
               <h1 className="text-3xl font-bold text-zinc-200 mb-4">
                 {document.title}
               </h1>
-
-              <p className="text-zinc-400 mb-6">
-                {document.description}
-              </p>
 
               <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-zinc-500">
                 <div className="flex flex-wrap items-center gap-4">
@@ -324,7 +320,7 @@ export default function BlogDetailPage() {
 
             {/* 文件內容 */}
             <Card className="bg-zinc-900 border-zinc-800 p-8">
-              <article className="prose prose-invert prose-zinc max-w-none">
+              <article className="prose prose-invert prose-zinc p-6">
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]}
                   components={{
