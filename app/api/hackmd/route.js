@@ -17,6 +17,8 @@ function cleanHackMDComments(content) {
       .replace(/<!--\s*a\s*為[^>]*-->/gi, '')
       // 移除 tags 行，格式如: ###### tags: `tag1` `tag2` `tag3`
       .replace(/^#{1,6}\s*tags:\s*(`[^`]*`\s*)*$/gmi, '')
+      // 移除第一個 h1 標題（因為已經在頁面標題顯示了）
+      .replace(/^#\s+.+$/m, '')
       // 移除空行（由移除註解後可能產生的多餘空行）
       .replace(/\n\s*\n\s*\n/g, '\n\n')
       .trim();
