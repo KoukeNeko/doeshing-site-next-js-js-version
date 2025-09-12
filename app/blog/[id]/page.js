@@ -6,7 +6,6 @@ import TitleBar from "@/components/layout/TitleBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { 
-  ArrowLeft,
   ExternalLink,
   RefreshCw,
   FileText,
@@ -121,7 +120,9 @@ export default function BlogDetailPage() {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return "未知日期";
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "未知日期";
     return date.toLocaleDateString("zh-TW", {
       year: "numeric",
       month: "long",
@@ -129,6 +130,24 @@ export default function BlogDetailPage() {
       hour: "2-digit",
       minute: "2-digit"
     });
+  };
+
+  const calculateReadingTime = (content) => {
+    if (!content) return 0;
+    // 中文字符數統計
+    const chineseChars = (content.match(/[\u4e00-\u9fff]/g) || []).length;
+    // 英文單詞數統計
+    const englishWords = content.replace(/[\u4e00-\u9fff]/g, '').split(/\s+/).filter(word => word.length > 0).length;
+    
+    // 中文閱讀速度: 約 300-400 字/分鐘，英文: 約 200-250 詞/分鐘
+    const chineseReadingSpeed = 350;
+    const englishReadingSpeed = 225;
+    
+    const chineseTime = chineseChars / chineseReadingSpeed;
+    const englishTime = englishWords / englishReadingSpeed;
+    
+    const totalMinutes = Math.ceil(chineseTime + englishTime);
+    return Math.max(1, totalMinutes); // 至少 1 分鐘
   };
 
   const copyToClipboard = async () => {
@@ -241,6 +260,10 @@ export default function BlogDetailPage() {
                   <div className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
                     {formatDate(document.lastModified)}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>📖</span>
+                    約 {calculateReadingTime(document.content)} 分鐘閱讀
                   </div>
                 </div>
 

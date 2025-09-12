@@ -140,12 +140,32 @@ export default function BlogPage() {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return "未知日期";
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "未知日期";
     return date.toLocaleDateString("zh-TW", {
       year: "numeric",
       month: "long",
       day: "numeric"
     });
+  };
+
+  const calculateReadingTime = (content) => {
+    if (!content) return "未知";
+    // 中文字符數統計
+    const chineseChars = (content.match(/[\u4e00-\u9fff]/g) || []).length;
+    // 英文單詞數統計
+    const englishWords = content.replace(/[\u4e00-\u9fff]/g, '').split(/\s+/).filter(word => word.length > 0).length;
+    
+    // 中文閱讀速度: 約 300-400 字/分鐘，英文: 約 200-250 詞/分鐘
+    const chineseReadingSpeed = 350;
+    const englishReadingSpeed = 225;
+    
+    const chineseTime = chineseChars / chineseReadingSpeed;
+    const englishTime = englishWords / englishReadingSpeed;
+    
+    const totalMinutes = Math.ceil(chineseTime + englishTime);
+    return Math.max(1, totalMinutes); // 至少 1 分鐘
   };
 
   // 取得所有可用的標籤
@@ -397,7 +417,7 @@ export default function BlogPage() {
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
-                            閱讀時間視內容而定
+                            約 {calculateReadingTime(doc.content)} 分鐘閱讀
                           </div>
                         </div>
                       </div>
