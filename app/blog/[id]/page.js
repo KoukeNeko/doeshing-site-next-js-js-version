@@ -26,7 +26,7 @@ export default function BlogDetailPage() {
   const params = useParams();
   const [isMobile, setIsMobile] = useState(false);
   const [initialized, setInitialized] = useState(false);
-  const [document, setDocument] = useState(null);
+  const [documentData, setDocumentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -70,7 +70,7 @@ export default function BlogDetailPage() {
           configId: params.id
         };
         
-        setDocument(doc);
+        setDocumentData(doc);
         
         // 生成目錄
         generateToc(doc.content);
@@ -96,9 +96,7 @@ export default function BlogDetailPage() {
       if (match) {
         const level = match[1].length;
         const text = match[2].trim();
-        const id = text.toLowerCase()
-          .replace(/[^\w\u4e00-\u9fff\s-]/g, '')
-          .replace(/\s+/g, '-');
+        const id = generateHeadingId(text);
         
         headings.push({
           id,
@@ -112,10 +110,52 @@ export default function BlogDetailPage() {
     setToc(headings);
   };
 
+  const generateHeadingId = (children) => {
+    // Handle various types of children from ReactMarkdown
+    let text = '';
+
+    if (typeof children === 'string') {
+      text = children;
+    } else if (Array.isArray(children)) {
+      // Recursively extract text from array of children
+      text = children.map(child => {
+        if (typeof child === 'string') return child;
+        if (child?.props?.children) return generateHeadingId(child.props.children);
+        return '';
+      }).join('');
+    } else if (children?.props?.children) {
+      // Handle React elements
+      text = generateHeadingId(children.props.children);
+    } else if (typeof children === 'object' && children !== null) {
+      // Try to convert object to string
+      text = String(children);
+    }
+
+    if (!text) return 'heading';
+
+    const id = text.toLowerCase()
+      .replace(/[^\w\u4e00-\u9fff\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/^-+|-+$/g, ''); // 移除開頭和結尾的連字符
+
+    return id || 'heading'; // 確保至少返回一個有效的ID
+  };
+
   const scrollToHeading = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    try {
+      if (!id) {
+        console.warn('scrollToHeading: No ID provided');
+        return;
+      }
+
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        console.warn(`scrollToHeading: Element with ID "${id}" not found`);
+      }
+    } catch (error) {
+      console.error('Error in scrollToHeading:', error);
     }
   };
 
@@ -164,7 +204,7 @@ export default function BlogDetailPage() {
 
   //debug
   console.log("Document Config:", docConfig);
-  console.log("Loaded Document:", document);
+  console.log("Loaded Document:", documentData);
   console.log("TOC:", toc);
 
   return (
@@ -216,7 +256,7 @@ export default function BlogDetailPage() {
           </div>
         )}
 
-        {document && (
+        {documentData && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -224,13 +264,13 @@ export default function BlogDetailPage() {
           >
             {/* 文件標題和元資訊 */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                            <div className="flex flex-wrap items-center gap-2 mb-4">
-                {document.featured && (
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                {documentData.featured && (
                   <Badge className="bg-yellow-600 text-white text-xs hover:bg-yellow-700">
                     精選
                   </Badge>
                 )}
-                {document.tags && document.tags.map(tag => (
+                {documentData.tags && documentData.tags.filter(tag => tag && typeof tag === 'string').map(tag => (
                   <Badge key={tag} variant="outline" className="border-zinc-700 text-zinc-300 text-xs">
                     <Tag className="h-3 w-3 mr-1" />
                     {tag}
@@ -239,7 +279,7 @@ export default function BlogDetailPage() {
               </div>
 
               <h1 className="text-3xl font-bold text-zinc-200 mb-4">
-                {document.title}
+                {documentData.title}
               </h1>
 
               <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-zinc-500">
@@ -250,11 +290,11 @@ export default function BlogDetailPage() {
                   </div>
                   <div className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
-                    {formatDate(document.lastModified)}
+                    {formatDate(documentData.lastModified)}
                   </div>
                   <div className="flex items-center gap-1">
                     <span>📖</span>
-                    約 {calculateReadingTime(document.content)} 分鐘閱讀
+                    約 {calculateReadingTime(documentData.content)} 分鐘閱讀
                   </div>
                 </div>
 
@@ -274,7 +314,7 @@ export default function BlogDetailPage() {
                     {copied ? "已複製" : "分享"}
                   </button>
                   <a 
-                    href={document.url} 
+                    href={documentData.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="link-underline link-underline-blue"
@@ -301,8 +341,15 @@ export default function BlogDetailPage() {
                     {toc.map((heading, index) => (
                       <button
                         key={index}
-                        onClick={() => scrollToHeading(heading.id)}
-                        className={`block w-full text-left px-3 py-2 rounded text-sm hover:bg-zinc-800 transition-colors ${
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (heading?.id) {
+                            scrollToHeading(heading.id);
+                          } else {
+                            console.warn('Heading ID is missing:', heading);
+                          }
+                        }}
+                        className={`flex items-center w-full text-left px-3 py-2 rounded text-sm hover:bg-zinc-800 transition-colors ${
                           heading.level === 1 ? 'text-zinc-200 font-semibold' :
                           heading.level === 2 ? 'text-zinc-300 font-medium pl-6' :
                           heading.level === 3 ? 'text-zinc-400 pl-8' :
@@ -312,10 +359,8 @@ export default function BlogDetailPage() {
                           paddingLeft: `${(heading.level - 1) * 0.75 + 0.75}rem`
                         }}
                       >
-                        <div className="flex items-center">
-                          <ChevronRight className="h-3 w-3 mr-1 flex-shrink-0" />
-                          <span className="truncate">{heading.text}</span>
-                        </div>
+                        <ChevronRight className="h-3 w-3 mr-1 flex-shrink-0" />
+                        <span className="truncate">{heading.text}</span>
                       </button>
                     ))}
                   </nav>
@@ -331,9 +376,7 @@ export default function BlogDetailPage() {
                   components={{
                     // 自訂 markdown 元件樣式
                     h1: ({children}) => {
-                      const id = String(children).toLowerCase()
-                        .replace(/[^\w\u4e00-\u9fff\s-]/g, '')
-                        .replace(/\s+/g, '-');
+                      const id = generateHeadingId(children);
                       return (
                         <h1 id={id} className="text-3xl font-bold text-zinc-200 mb-6 border-b border-zinc-700 pb-3 mt-8 first:mt-0 scroll-mt-4">
                           {children}
@@ -341,9 +384,7 @@ export default function BlogDetailPage() {
                       );
                     },
                     h2: ({children}) => {
-                      const id = String(children).toLowerCase()
-                        .replace(/[^\w\u4e00-\u9fff\s-]/g, '')
-                        .replace(/\s+/g, '-');
+                      const id = generateHeadingId(children);
                       return (
                         <h2 id={id} className="text-2xl font-semibold text-zinc-200 mb-4 mt-8 border-l-4 border-blue-500 pl-4 scroll-mt-4">
                           {children}
@@ -351,9 +392,7 @@ export default function BlogDetailPage() {
                       );
                     },
                     h3: ({children}) => {
-                      const id = String(children).toLowerCase()
-                        .replace(/[^\w\u4e00-\u9fff\s-]/g, '')
-                        .replace(/\s+/g, '-');
+                      const id = generateHeadingId(children);
                       return (
                         <h3 id={id} className="text-xl font-medium text-zinc-200 mb-3 mt-6 scroll-mt-4">
                           {children}
@@ -361,20 +400,46 @@ export default function BlogDetailPage() {
                       );
                     },
                     h4: ({children}) => {
-                      const id = String(children).toLowerCase()
-                        .replace(/[^\w\u4e00-\u9fff\s-]/g, '')
-                        .replace(/\s+/g, '-');
+                      const id = generateHeadingId(children);
                       return (
                         <h4 id={id} className="text-lg font-medium text-zinc-300 mb-2 mt-4 scroll-mt-4">
                           {children}
                         </h4>
                       );
                     },
-                    p: ({children}) => (
-                      <p className="text-zinc-300 mb-4 leading-relaxed text-base">
-                        {children}
-                      </p>
-                    ),
+                    p: ({children}) => {
+                      if (!children) return null;
+
+                      // Check if children contains block-level elements
+                      const hasBlockLevel = Array.isArray(children)
+                        ? children.some(child =>
+                            child?.type === 'div' ||
+                            child?.props?.originalType === 'img' ||
+                            child?.props?.originalType === 'div' ||
+                            (typeof child === 'object' && child?.props?.mdxType === 'img')
+                          )
+                        : (typeof children === 'object' && (
+                            children?.type === 'div' ||
+                            children?.props?.originalType === 'img' ||
+                            children?.props?.originalType === 'div' ||
+                            children?.props?.mdxType === 'img'
+                          ));
+
+                      // If block-level elements are present, render as div instead of p
+                      if (hasBlockLevel) {
+                        return (
+                          <div className="text-zinc-300 mb-4 leading-relaxed text-base">
+                            {children}
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <p className="text-zinc-300 mb-4 leading-relaxed text-base">
+                          {children}
+                        </p>
+                      );
+                    },
                     a: ({href, children}) => (
                       <a 
                         href={href} 
@@ -409,21 +474,30 @@ export default function BlogDetailPage() {
                         {children}
                       </blockquote>
                     ),
-                    ul: ({children}) => (
-                      <ul className="text-zinc-300 mb-4 pl-6 space-y-2 list-disc marker:text-blue-400">
-                        {children}
-                      </ul>
-                    ),
-                    ol: ({children}) => (
-                      <ol className="text-zinc-300 mb-4 pl-6 space-y-2 list-decimal marker:text-blue-400">
-                        {children}
-                      </ol>
-                    ),
-                    li: ({children}) => (
-                      <li className="leading-relaxed">
-                        {children}
-                      </li>
-                    ),
+                    ul: ({children}) => {
+                      if (!children) return null;
+                      return (
+                        <ul className="text-zinc-300 mb-4 pl-6 space-y-2 list-disc marker:text-blue-400">
+                          {children}
+                        </ul>
+                      );
+                    },
+                    ol: ({children}) => {
+                      if (!children) return null;
+                      return (
+                        <ol className="text-zinc-300 mb-4 pl-6 space-y-2 list-decimal marker:text-blue-400">
+                          {children}
+                        </ol>
+                      );
+                    },
+                    li: ({children}) => {
+                      if (!children) return null;
+                      return (
+                        <li className="leading-relaxed">
+                          {children}
+                        </li>
+                      );
+                    },
                     table: ({children}) => (
                       <div className="overflow-x-auto mb-6">
                         <table className="min-w-full border-collapse border border-zinc-700 bg-zinc-800/50">
@@ -441,41 +515,53 @@ export default function BlogDetailPage() {
                         {children}
                       </tbody>
                     ),
-                    tr: ({children}) => (
-                      <tr className="border-b border-zinc-700 hover:bg-zinc-800/30">
-                        {children}
-                      </tr>
-                    ),
-                    th: ({children}) => (
-                      <th className="border border-zinc-600 px-4 py-2 text-left font-semibold text-zinc-200">
-                        {children}
-                      </th>
-                    ),
-                    td: ({children}) => (
-                      <td className="border border-zinc-600 px-4 py-2 text-zinc-300">
-                        {children}
-                      </td>
-                    ),
+                    tr: ({children}) => {
+                      if (!children) return null;
+                      return (
+                        <tr className="border-b border-zinc-700 hover:bg-zinc-800/30">
+                          {children}
+                        </tr>
+                      );
+                    },
+                    th: ({children}) => {
+                      if (!children) return null;
+                      return (
+                        <th className="border border-zinc-600 px-4 py-2 text-left font-semibold text-zinc-200">
+                          {children}
+                        </th>
+                      );
+                    },
+                    td: ({children}) => {
+                      if (!children) return null;
+                      return (
+                        <td className="border border-zinc-600 px-4 py-2 text-zinc-300">
+                          {children}
+                        </td>
+                      );
+                    },
                     hr: () => (
                       <hr className="my-8 border-zinc-700" />
                     ),
-                    img: ({src, alt}) => (
-                      <div className="my-6">
-                        <img 
-                          src={src} 
-                          alt={alt}
-                          className="max-w-full h-auto rounded-lg border border-zinc-700 shadow-lg"
-                        />
-                        {alt && (
-                          <p className="text-center text-sm text-zinc-400 mt-2 italic">
-                            {alt}
-                          </p>
-                        )}
-                      </div>
-                    ),
+                    img: ({src, alt}) => {
+                      if (!src) return null;
+                      return (
+                        <span className="block my-6">
+                          <img
+                            src={src}
+                            alt={alt}
+                            className="max-w-full h-auto rounded-lg border border-zinc-700 shadow-lg"
+                          />
+                          {alt && (
+                            <span className="block text-center text-sm text-zinc-400 mt-2 italic">
+                              {alt}
+                            </span>
+                          )}
+                        </span>
+                      );
+                    },
                   }}
                 >
-                  {document.content}
+                  {documentData.content}
                 </ReactMarkdown>
               </article>
             </Card>
