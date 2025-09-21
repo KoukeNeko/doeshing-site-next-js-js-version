@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import TitleBar from "@/components/layout/TitleBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+
 import { 
   Calendar, 
   ExternalLink, 
@@ -354,15 +357,16 @@ export default function BlogPage() {
                             </span>
                           )}
                           {doc.isAutoLoaded && (
-                            <span className="px-2 py-1 bg-green-600 text-white text-xs rounded">
+                            <Badge >
                               自動載入
-                            </span>
+                            </Badge>
                           )}
                           {doc.tags && doc.tags.map(tag => (
-                            <span key={tag} className="px-2 py-1 bg-zinc-800 text-zinc-300 text-xs rounded">
-                              <Tag className="h-3 w-3 mr-1 inline" />
+                            <Badge 
+                              key={tag} 
+                            >
                               {tag}
-                            </span>
+                            </Badge>
                           ))}
                         </div>
                         
