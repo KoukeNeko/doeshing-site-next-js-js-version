@@ -247,17 +247,18 @@ export default function BlogPage() {
                 const isSelected = selectedTags.includes(tag);
                 const tagCount = documents.filter(doc => doc.tags && doc.tags.includes(tag)).length;
                 return (
-                  <button
+                  <Badge
                     key={tag}
-                    onClick={() => toggleTag(tag)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-all hover:scale-105 ${
-                      isSelected 
-                        ? 'bg-blue-600 text-white ring-2 ring-blue-400' 
-                        : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-zinc-700'
+                    variant="outline"
+                    className={`cursor-pointer transition-all hover:scale-105 ${
+                      isSelected
+                        ? 'border-blue-500 text-blue-300 bg-blue-500/10 hover:bg-blue-500/20'
+                        : 'border-zinc-700 text-zinc-300 hover:bg-zinc-700/20'
                     }`}
+                    onClick={() => toggleTag(tag)}
                   >
                     {tag} ({tagCount})
-                  </button>
+                  </Badge>
                 );
               })}
             </div>
@@ -364,6 +365,8 @@ export default function BlogPage() {
                           {doc.tags && doc.tags.map(tag => (
                             <Badge 
                               key={tag} 
+                              variant="outline"
+                              className="border-zinc-700 text-zinc-300 hover:bg-zinc-700/20"
                             >
                               {tag}
                             </Badge>
