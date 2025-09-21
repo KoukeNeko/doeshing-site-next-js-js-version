@@ -204,8 +204,8 @@ export default function BlogPage() {
   if (!initialized) return null;
 
   return (
-    <div className="w-screen min-h-dvh relative flex justify-center">
-      <div className="container max-w-6xl mx-auto px-4 py-8">
+    <div className="w-full min-h-dvh relative flex justify-center">
+      <div className="container max-w-6xl mx-auto px-4 py-8 w-full">
         <TitleBar 
           title="技術文件與筆記" 
           subtitle="HackMD 整合的知識庫"
@@ -340,34 +340,34 @@ export default function BlogPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <Card className={`bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors p-6 ${doc.featured ? 'ring-2 ring-yellow-500/20' : ''}`}>
+                  <Card className={`bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors p-4 sm:p-6 ${doc.featured ? 'ring-2 ring-yellow-500/20' : ''}`}>
                     <div className="flex flex-col lg:flex-row lg:items-start gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
                           {doc.featured && (
-                            <span className="px-2 py-1 bg-yellow-600 text-white text-xs rounded">
+                            <Badge className="bg-yellow-600 text-white text-xs hover:bg-yellow-700">
                               精選
-                            </span>
+                            </Badge>
                           )}
                           {doc.tags && doc.tags.map(tag => (
-                            <Badge 
-                              key={tag} 
+                            <Badge
+                              key={tag}
                               variant="outline"
-                              className="border-zinc-700 text-zinc-300 hover:bg-zinc-700/20"
+                              className="border-zinc-700 text-zinc-300 hover:bg-zinc-700/20 text-xs"
                             >
                               {tag}
                             </Badge>
                           ))}
                         </div>
                         
-                        <h3 className="text-xl font-semibold text-zinc-200 mb-3 hover:text-blue-400 transition-colors">
-                          <a 
-                            href={doc.url} 
-                            target="_blank" 
+                        <h3 className="text-lg sm:text-xl font-semibold text-zinc-200 mb-3 hover:text-blue-400 transition-colors">
+                          <a
+                            href={doc.url}
+                            target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-start gap-2"
+                            className="flex items-start gap-2 break-words"
                           >
-                            {doc.title}
+                            <span className="break-words">{doc.title}</span>
                             <ExternalLink className="h-4 w-4 mt-1 flex-shrink-0" />
                           </a>
                         </h3>
@@ -376,34 +376,34 @@ export default function BlogPage() {
                           {doc.description}
                         </p>
                         
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-zinc-500">
                           <div className="flex items-center gap-1">
-                            <FileText className="h-4 w-4" />
+                            <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
                             HackMD 文件
                           </div>
                           <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
+                            <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
                             {formatDate(doc.lastModified)}
                           </div>
                           <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4" />
+                            <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                             約 {calculateReadingTime(doc.content, doc.description)} 分鐘閱讀
                           </div>
                         </div>
                       </div>
-                      
-                      <div className="lg:ml-4 flex gap-4 mt-auto">
-                        <a 
+
+                      <div className="lg:ml-4 flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 lg:mt-auto">
+                        <a
                           href={`/blog/${doc.configId}`}
-                          className="link-underline link-underline-blue"
+                          className="link-underline link-underline-blue text-sm sm:text-base text-center sm:text-left"
                         >
                           閱讀文章
                         </a>
-                        <a 
-                          href={doc.url} 
-                          target="_blank" 
+                        <a
+                          href={doc.url}
+                          target="_blank"
                           rel="noopener noreferrer"
-                          className="link-underline link-underline-gray"
+                          className="link-underline link-underline-gray text-sm sm:text-base text-center sm:text-left"
                         >
                           HackMD 原文
                         </a>
