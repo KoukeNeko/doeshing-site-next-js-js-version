@@ -81,8 +81,8 @@ export default function Header() {
       href: "/blog",
       icon: <ReceiptText className="mr-2" size={16} />,
       label: t("blog"),
-      active: true, // external link won't be active in the current app
-      isExternal: true,
+      active: pathname?.startsWith("/blog"),
+      isExternal: false,
     },
     {
       href: "/projects",
