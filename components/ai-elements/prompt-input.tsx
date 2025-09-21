@@ -332,14 +332,7 @@ export const PromptInput = ({
 
   // Note: File input cannot be programmatically set for security reasons
   // The syncHiddenInput prop is no longer functional
-  useEffect(() => {
-    if (syncHiddenInput && inputRef.current) {
-      // Clear the input when items are cleared
-      if (items.length === 0) {
-        inputRef.current.value = "";
-      }
-    }
-  }, [items, syncHiddenInput]);
+  // Removed syncHiddenInput logic as it is no longer functional
 
   // Attach drop handlers on nearest form and document (opt-in)
   useEffect(() => {
