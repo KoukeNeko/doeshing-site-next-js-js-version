@@ -150,7 +150,15 @@ export default function BlogDetailPage() {
 
       const element = document.getElementById(id);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // 取得元素位置並減去偏移量（例如 80px 給固定的 header）
+        const offsetTop = 80; // 調整這個值來改變距離頂部的距離
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - offsetTop;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
       } else {
         console.warn(`scrollToHeading: Element with ID "${id}" not found`);
       }
