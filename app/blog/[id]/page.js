@@ -67,8 +67,7 @@ export default function BlogDetailPage() {
           description: (docConfig?.description) || data.description,
           tags: (docConfig?.tags) || data.tags || [],
           featured: (docConfig?.featured) || false,
-          configId: params.id,
-          isFromConfig: !!docConfig
+          configId: params.id
         };
         
         setDocument(doc);
@@ -229,15 +228,6 @@ export default function BlogDetailPage() {
                 {document.featured && (
                   <Badge className="bg-yellow-600 text-white text-xs hover:bg-yellow-700">
                     精選
-                  </Badge>
-                )}
-                {document.isFromConfig ? (
-                  <Badge className="bg-purple-600 text-white text-xs hover:bg-purple-700">
-                    已配置
-                  </Badge>
-                ) : (
-                  <Badge className="bg-green-600 text-white text-xs hover:bg-green-700">
-                    自動載入
                   </Badge>
                 )}
                 {document.tags && document.tags.map(tag => (

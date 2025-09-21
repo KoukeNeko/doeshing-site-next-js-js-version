@@ -55,7 +55,7 @@ export default function BlogPage() {
     try {
       let allDocs = [];
       
-      // 優先嘗試自動載入使用者的所有筆記
+      // 嘗試從API載入筆記
       const apiToken = process.env.NEXT_PUBLIC_HACKMD_API_TOKEN || localStorage.getItem('hackmd_api_token');
       
       try {
@@ -79,18 +79,16 @@ export default function BlogPage() {
             configId: note.shortId,
             // 從 API 獲取的額外資訊
             createdAt: note.createdAt,
-            publishType: note.publishType,
-            isAutoLoaded: true // 標記為自動載入
+            publishType: note.publishType
           }));
           
-          console.log(`自動載入了 ${allDocs.length} 個公開筆記`);
         } else {
           throw new Error('無法載入筆記列表');
         }
       } catch (apiError) {
-        console.log('自動載入失敗，嘗試使用配置的文件:', apiError.message);
+        console.log('載入失敗，嘗試使用配置的文件:', apiError.message);
         
-        // 如果自動載入失敗，使用配置的文件列表
+        // 如果載入失敗，使用配置的文件列表
         for (const doc of configuredDocs) {
           try {
             const response = await fetch(`/api/hackmd?noteId=${encodeURIComponent(doc.id)}`);
@@ -102,8 +100,7 @@ export default function BlogPage() {
                 description: doc.description || data.description,
                 tags: doc.tags || data.tags || [],
                 featured: doc.featured,
-                configId: doc.id,
-                isAutoLoaded: false
+                configId: doc.id
               });
             } else {
               console.error(`Failed to fetch HackMD document ${doc.id}:`, response.statusText);
@@ -276,11 +273,6 @@ export default function BlogPage() {
               <Badge variant="outline" className="border-orange-700 text-orange-300 hover:bg-orange-700/20">
                 {filteredDocuments.length} 個顯示
               </Badge>
-              {documents.some(doc => doc.isAutoLoaded) && (
-                <Badge variant="outline" className="border-blue-700 text-blue-300 hover:bg-blue-700/20">
-                  自動載入
-                </Badge>
-              )}
               {documents.filter(doc => doc.featured).length > 0 && (
                 <Badge variant="outline" className="border-yellow-700 text-yellow-300 hover:bg-yellow-700/20">
                   {documents.filter(doc => doc.featured).length} 個精選
@@ -356,11 +348,6 @@ export default function BlogPage() {
                             <span className="px-2 py-1 bg-yellow-600 text-white text-xs rounded">
                               精選
                             </span>
-                          )}
-                          {doc.isAutoLoaded && (
-                            <Badge >
-                              自動載入
-                            </Badge>
                           )}
                           {doc.tags && doc.tags.map(tag => (
                             <Badge 
