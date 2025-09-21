@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import TitleBar from "@/components/layout/TitleBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { 
   ExternalLink,
   RefreshCw,
@@ -224,26 +225,26 @@ export default function BlogDetailPage() {
           >
             {/* 文件標題和元資訊 */}
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-              <div className="flex items-center gap-2 mb-4">
+                            <div className="flex flex-wrap items-center gap-2 mb-4">
                 {document.featured && (
-                  <span className="px-2 py-1 bg-yellow-600 text-white text-xs rounded">
+                  <Badge className="bg-yellow-600 text-white text-xs hover:bg-yellow-700">
                     精選
-                  </span>
+                  </Badge>
                 )}
                 {document.isFromConfig ? (
-                  <span className="px-2 py-1 bg-purple-600 text-white text-xs rounded">
+                  <Badge className="bg-purple-600 text-white text-xs hover:bg-purple-700">
                     已配置
-                  </span>
+                  </Badge>
                 ) : (
-                  <span className="px-2 py-1 bg-green-600 text-white text-xs rounded">
+                  <Badge className="bg-green-600 text-white text-xs hover:bg-green-700">
                     自動載入
-                  </span>
+                  </Badge>
                 )}
                 {document.tags && document.tags.map(tag => (
-                  <span key={tag} className="px-2 py-1 bg-zinc-800 text-zinc-300 text-xs rounded">
-                    <Tag className="h-3 w-3 mr-1 inline" />
+                  <Badge key={tag} variant="outline" className="border-zinc-700 text-zinc-300 text-xs">
+                    <Tag className="h-3 w-3 mr-1" />
                     {tag}
-                  </span>
+                  </Badge>
                 ))}
               </div>
 
