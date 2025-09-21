@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import TitleBar from "@/components/layout/TitleBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+
 import { 
   Calendar, 
   ExternalLink, 
@@ -52,7 +55,7 @@ export default function BlogPage() {
     try {
       let allDocs = [];
       
-      // 優先嘗試自動載入使用者的所有筆記
+      // 嘗試從API載入筆記
       const apiToken = process.env.NEXT_PUBLIC_HACKMD_API_TOKEN || localStorage.getItem('hackmd_api_token');
       
       try {
@@ -76,18 +79,16 @@ export default function BlogPage() {
             configId: note.shortId,
             // 從 API 獲取的額外資訊
             createdAt: note.createdAt,
-            publishType: note.publishType,
-            isAutoLoaded: true // 標記為自動載入
+            publishType: note.publishType
           }));
           
-          console.log(`自動載入了 ${allDocs.length} 個公開筆記`);
         } else {
           throw new Error('無法載入筆記列表');
         }
       } catch (apiError) {
-        console.log('自動載入失敗，嘗試使用配置的文件:', apiError.message);
+        console.log('載入失敗，嘗試使用配置的文件:', apiError.message);
         
-        // 如果自動載入失敗，使用配置的文件列表
+        // 如果載入失敗，使用配置的文件列表
         for (const doc of configuredDocs) {
           try {
             const response = await fetch(`/api/hackmd?noteId=${encodeURIComponent(doc.id)}`);
@@ -99,8 +100,7 @@ export default function BlogPage() {
                 description: doc.description || data.description,
                 tags: doc.tags || data.tags || [],
                 featured: doc.featured,
-                configId: doc.id,
-                isAutoLoaded: false
+                configId: doc.id
               });
             } else {
               console.error(`Failed to fetch HackMD document ${doc.id}:`, response.statusText);
@@ -244,17 +244,18 @@ export default function BlogPage() {
                 const isSelected = selectedTags.includes(tag);
                 const tagCount = documents.filter(doc => doc.tags && doc.tags.includes(tag)).length;
                 return (
-                  <button
+                  <Badge
                     key={tag}
-                    onClick={() => toggleTag(tag)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-all hover:scale-105 ${
-                      isSelected 
-                        ? 'bg-blue-600 text-white ring-2 ring-blue-400' 
-                        : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-zinc-700'
+                    variant="outline"
+                    className={`cursor-pointer transition-all hover:scale-105 ${
+                      isSelected
+                        ? 'border-blue-500 text-blue-300 bg-blue-500/10 hover:bg-blue-500/20'
+                        : 'border-zinc-700 text-zinc-300 hover:bg-zinc-700/20'
                     }`}
+                    onClick={() => toggleTag(tag)}
                   >
                     {tag} ({tagCount})
-                  </button>
+                  </Badge>
                 );
               })}
             </div>
@@ -266,26 +267,21 @@ export default function BlogPage() {
               文件狀態
             </h3>
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 bg-green-800 border border-green-700 rounded-full text-sm text-green-300">
+              <Badge variant="outline" className="border-green-700 text-green-300 hover:bg-green-700/20">
                 {documents.length} 個文件
-              </span>
-              <span className="px-3 py-1 bg-orange-800 border border-orange-700 rounded-full text-sm text-orange-300">
+              </Badge>
+              <Badge variant="outline" className="border-orange-700 text-orange-300 hover:bg-orange-700/20">
                 {filteredDocuments.length} 個顯示
-              </span>
-              {documents.some(doc => doc.isAutoLoaded) && (
-                <span className="px-3 py-1 bg-blue-800 border border-blue-700 rounded-full text-sm text-blue-300">
-                  自動載入
-                </span>
-              )}
+              </Badge>
               {documents.filter(doc => doc.featured).length > 0 && (
-                <span className="px-3 py-1 bg-yellow-800 border border-yellow-700 rounded-full text-sm text-yellow-300">
+                <Badge variant="outline" className="border-yellow-700 text-yellow-300 hover:bg-yellow-700/20">
                   {documents.filter(doc => doc.featured).length} 個精選
-                </span>
+                </Badge>
               )}
               {selectedTags.length > 0 && (
-                <span className="px-3 py-1 bg-purple-800 border border-purple-700 rounded-full text-sm text-purple-300">
+                <Badge variant="outline" className="border-purple-700 text-purple-300 hover:bg-purple-700/20">
                   已選 {selectedTags.length} 個標籤
-                </span>
+                </Badge>
               )}
             </div>
           </div>
@@ -353,16 +349,14 @@ export default function BlogPage() {
                               精選
                             </span>
                           )}
-                          {doc.isAutoLoaded && (
-                            <span className="px-2 py-1 bg-green-600 text-white text-xs rounded">
-                              自動載入
-                            </span>
-                          )}
                           {doc.tags && doc.tags.map(tag => (
-                            <span key={tag} className="px-2 py-1 bg-zinc-800 text-zinc-300 text-xs rounded">
-                              <Tag className="h-3 w-3 mr-1 inline" />
+                            <Badge 
+                              key={tag} 
+                              variant="outline"
+                              className="border-zinc-700 text-zinc-300 hover:bg-zinc-700/20"
+                            >
                               {tag}
-                            </span>
+                            </Badge>
                           ))}
                         </div>
                         
