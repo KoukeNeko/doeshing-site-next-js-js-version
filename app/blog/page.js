@@ -269,26 +269,26 @@ export default function BlogPage() {
               文件狀態
             </h3>
             <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 bg-green-800 border border-green-700 rounded-full text-sm text-green-300">
+              <Badge variant="outline" className="border-green-700 text-green-300 hover:bg-green-700/20">
                 {documents.length} 個文件
-              </span>
-              <span className="px-3 py-1 bg-orange-800 border border-orange-700 rounded-full text-sm text-orange-300">
+              </Badge>
+              <Badge variant="outline" className="border-orange-700 text-orange-300 hover:bg-orange-700/20">
                 {filteredDocuments.length} 個顯示
-              </span>
+              </Badge>
               {documents.some(doc => doc.isAutoLoaded) && (
-                <span className="px-3 py-1 bg-blue-800 border border-blue-700 rounded-full text-sm text-blue-300">
+                <Badge variant="outline" className="border-blue-700 text-blue-300 hover:bg-blue-700/20">
                   自動載入
-                </span>
+                </Badge>
               )}
               {documents.filter(doc => doc.featured).length > 0 && (
-                <span className="px-3 py-1 bg-yellow-800 border border-yellow-700 rounded-full text-sm text-yellow-300">
+                <Badge variant="outline" className="border-yellow-700 text-yellow-300 hover:bg-yellow-700/20">
                   {documents.filter(doc => doc.featured).length} 個精選
-                </span>
+                </Badge>
               )}
               {selectedTags.length > 0 && (
-                <span className="px-3 py-1 bg-purple-800 border border-purple-700 rounded-full text-sm text-purple-300">
+                <Badge variant="outline" className="border-purple-700 text-purple-300 hover:bg-purple-700/20">
                   已選 {selectedTags.length} 個標籤
-                </span>
+                </Badge>
               )}
             </div>
           </div>
