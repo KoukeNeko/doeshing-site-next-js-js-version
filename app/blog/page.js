@@ -392,10 +392,10 @@ export default function BlogPage() {
                         </div>
                       </div>
 
-                      <div className="lg:ml-4 flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 lg:mt-auto">
+                      <div className="lg:ml-4 flex justify-between sm:justify-start sm:gap-4 mt-4 lg:mt-auto">
                         <a
                           href={`/blog/${doc.configId}`}
-                          className="link-underline link-underline-blue text-sm sm:text-base text-center sm:text-left"
+                          className="link-underline link-underline-blue text-sm sm:text-base"
                         >
                           閱讀文章
                         </a>
@@ -403,7 +403,7 @@ export default function BlogPage() {
                           href={doc.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="link-underline link-underline-gray text-sm sm:text-base text-center sm:text-left"
+                          className="link-underline link-underline-gray text-sm sm:text-base"
                         >
                           HackMD 原文
                         </a>
