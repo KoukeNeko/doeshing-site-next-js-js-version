@@ -27,45 +27,45 @@ import remarkGfm from 'remark-gfm';
 const ADMONITION_STYLES = {
   info: {
     title: "資訊",
-    borderClass: "border-blue-500/60",
-    backgroundClass: "bg-blue-500/10",
+    borderClass: "border-blue-500",
+    backgroundClass: "bg-blue-500/15",
     icon: Info,
-    iconClass: "text-blue-300"
+    iconClass: "text-blue-400"
   },
   note: {
     title: "附註",
-    borderClass: "border-sky-500/60",
-    backgroundClass: "bg-sky-500/10",
+    borderClass: "border-sky-500",
+    backgroundClass: "bg-sky-500/15",
     icon: Info,
-    iconClass: "text-sky-300"
+    iconClass: "text-sky-400"
   },
   warning: {
     title: "警告",
-    borderClass: "border-amber-500/70",
-    backgroundClass: "bg-amber-500/10",
+    borderClass: "border-amber-500",
+    backgroundClass: "bg-amber-500/15",
     icon: AlertTriangle,
-    iconClass: "text-amber-300"
+    iconClass: "text-amber-400"
   },
   danger: {
     title: "注意",
-    borderClass: "border-red-500/70",
-    backgroundClass: "bg-red-500/10",
+    borderClass: "border-red-500",
+    backgroundClass: "bg-red-500/15",
     icon: AlertCircle,
-    iconClass: "text-red-300"
+    iconClass: "text-red-400"
   },
   success: {
     title: "成功",
-    borderClass: "border-emerald-500/70",
-    backgroundClass: "bg-emerald-500/10",
+    borderClass: "border-emerald-500",
+    backgroundClass: "bg-emerald-500/15",
     icon: CheckCircle2,
-    iconClass: "text-emerald-300"
+    iconClass: "text-emerald-400"
   },
   tip: {
     title: "小技巧",
-    borderClass: "border-emerald-500/70",
-    backgroundClass: "bg-emerald-500/10",
+    borderClass: "border-purple-500",
+    backgroundClass: "bg-purple-500/15",
     icon: Lightbulb,
-    iconClass: "text-emerald-200"
+    iconClass: "text-purple-400"
   }
 };
 
@@ -92,25 +92,43 @@ const buildAdmonitionBlock = (type, title, bodyLines) => {
 const transformHackMdAdmonitions = (content) => {
   if (!content) return '';
 
-  const lines = content.split(/\r?\n/);
-  const result = [];
+  let processedContent = content;
+  
+  // 第一步：移除所有獨立的 admonition 標記行
+  const lines = processedContent.split(/\r?\n/);
+  const cleanedLines = lines.filter(line => {
+    // 移除孤立的 admonition 標記（不在 blockquote 中的）
+    const standaloneMatch = line.match(/^\s*\[!(\w+)\]\s*(.*)$/i);
+    if (standaloneMatch) {
+      console.log('Removing standalone admonition line:', line);
+      return false;
+    }
+    return true;
+  });
+  
+  processedContent = cleanedLines.join('\n');
+  
+  // 第二步：處理 HackMD 格式的 admonitions
+  const resultLines = [];
+  const splitLines = processedContent.split(/\r?\n/);
   let inBlock = false;
   let blockType = '';
   let blockTitle = '';
   let blockLines = [];
 
   const flushBlock = () => {
-    result.push(...buildAdmonitionBlock(blockType, blockTitle, blockLines));
+    resultLines.push(...buildAdmonitionBlock(blockType, blockTitle, blockLines));
     inBlock = false;
     blockType = '';
     blockTitle = '';
     blockLines = [];
   };
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+  for (let i = 0; i < splitLines.length; i++) {
+    const line = splitLines[i];
 
     if (!inBlock) {
+      // 處理 HackMD 格式: :::warning 或 :::info 等
       const startMatch = line.match(/^:::(\w+)\s*(.*)$/);
       if (startMatch) {
         blockType = startMatch[1].toLowerCase();
@@ -120,19 +138,16 @@ const transformHackMdAdmonitions = (content) => {
         if (inlineMatch) {
           blockTitle = inlineMatch[1].trim();
           blockLines = [];
-          result.push(...buildAdmonitionBlock(blockType, blockTitle, blockLines));
-          inBlock = false;
-          blockType = '';
-          blockTitle = '';
-          blockLines = [];
+          resultLines.push(...buildAdmonitionBlock(blockType, blockTitle, blockLines));
         } else {
           inBlock = true;
           blockTitle = rest.trim();
           blockLines = [];
         }
-      } else {
-        result.push(line);
+        continue;
       }
+      
+      resultLines.push(line);
     } else {
       if (line.trim() === ':::') {
         flushBlock();
@@ -146,7 +161,7 @@ const transformHackMdAdmonitions = (content) => {
     flushBlock();
   }
 
-  return result.join('\n').trimEnd();
+  return resultLines.join('\n').trimEnd();
 };
 
 const ADMONITION_MARKER_REGEX = /^\s*\[!(\w+)\]\s*(.*)$/i;
@@ -252,6 +267,8 @@ export default function BlogDetailPage() {
         };
 
         const processedContent = transformHackMdAdmonitions(doc.content);
+        console.log('Original content:', doc.content?.substring(0, 1000));
+        console.log('Processed content:', processedContent?.substring(0, 1000));
         const enrichedDoc = {
           ...doc,
           processedContent
@@ -554,6 +571,13 @@ export default function BlogDetailPage() {
                     p: ({children}) => {
                       if (!children) return null;
 
+                      // 檢查是否包含 admonition 標記並跳過渲染
+                      const textContent = getNodeText(children);
+                      if (textContent && textContent.match(/^\s*\[!\w+\]/i)) {
+                        console.log('Skipping admonition paragraph:', textContent);
+                        return null;
+                      }
+
                       // Check if children contains block-level elements
                       const hasBlockLevel = Array.isArray(children)
                         ? children.some(child =>
@@ -641,16 +665,18 @@ export default function BlogDetailPage() {
                       }
 
                       const { borderClass, backgroundClass, icon: IconComponent, iconClass, title } = ADMONITION_STYLES[typeKey];
+                      
+                      // 移除第一行 admonition 標記，只保留其餘內容
                       const contentNodes = nodeArray.slice(1);
 
                       return (
-                        <div className={`my-6 rounded-lg border ${borderClass} ${backgroundClass} px-4 py-3`}>
-                          <div className="flex items-center gap-2 text-sm font-semibold text-zinc-100">
-                            <IconComponent className={`h-4 w-4 ${iconClass}`} />
-                            <span>{customTitle || title}</span>
+                        <div className={`my-6 rounded-lg border-2 ${borderClass} ${backgroundClass} px-5 py-4 shadow-sm`}>
+                          <div className="flex items-center gap-3 mb-3">
+                            <IconComponent className={`h-5 w-5 ${iconClass} flex-shrink-0`} />
+                            <span className={`font-medium ${iconClass} text-base`}>{customTitle || title}</span>
                           </div>
                           {contentNodes.length > 0 && (
-                            <div className="mt-3 space-y-3 text-sm text-zinc-200">
+                            <div className="space-y-3 text-sm leading-relaxed">
                               {contentNodes.map((node, index) => (
                                 <React.Fragment key={index}>{node}</React.Fragment>
                               ))}
