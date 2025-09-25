@@ -6,7 +6,7 @@ import TitleBar from "@/components/layout/TitleBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   ExternalLink,
   RefreshCw,
@@ -615,21 +615,24 @@ export default function BlogDetailPage() {
                       }
 
                       let typeKey = null;
-                      let customTitle = '';
+                      let title = '';
+                      let descriptionNodes = [];
 
-                      // 檢查是否有 admonition 標記
+                      // 檢查第一行是否有 admonition 標記
                       const firstNode = nodeArray[0];
                       if (React.isValidElement(firstNode)) {
                         const firstText = getNodeText(firstNode.props.children);
                         const markerMatch = firstText.match(ADMONITION_MARKER_REGEX);
                         if (markerMatch) {
                           typeKey = markerMatch[1].toLowerCase();
-                          customTitle = markerMatch[2]?.trim() || '';
+                          title = markerMatch[2]?.trim() || '';
+                          // 移除第一個節點（標記行），剩下的作為描述
+                          descriptionNodes = nodeArray.slice(1);
                         }
                       }
 
-                      // 如果沒有明確的 admonition 標記，嘗試自動檢測
-                      if (!typeKey || !ADMONITION_MAPPING[typeKey]) {
+                      // 如果沒有找到標記，嘗試自動檢測並將第一行作為標題
+                      if (!typeKey) {
                         const allText = nodeArray.map(node => getNodeText(node)).join(' ').toLowerCase();
                         
                         let autoType = 'info';
@@ -654,25 +657,29 @@ export default function BlogDetailPage() {
                         }
                         
                         typeKey = autoType;
-                        console.log('Auto-detected admonition type:', autoType, 'for content:', allText.substring(0, 100));
+                        
+                        // 第一行作為標題，其餘作為描述
+                        title = getNodeText(firstNode).trim();
+                        descriptionNodes = nodeArray.slice(1);
                       }
 
                       const config = ADMONITION_MAPPING[typeKey] || ADMONITION_MAPPING.info;
                       const IconComponent = config.icon;
-                      
-                      // 如果有 admonition 標記，移除第一行；否則保留所有內容
-                      const contentNodes = (typeKey && customTitle) ? nodeArray.slice(1) : nodeArray;
 
-                      // 將內容轉換為純文字，整合到 AlertTitle 中
-                      const contentText = contentNodes.map(node => getNodeText(node)).join(' ').trim();
-                      const displayTitle = customTitle || contentText || config.title;
+                      // 如果沒有標題，使用預設標題
+                      if (!title) {
+                        title = config.title;
+                        descriptionNodes = nodeArray; // 全部作為描述
+                      }
 
                       return (
-                        <Alert variant={config.variant} className="my-6">
+                        <Alert variant={config.variant} className="">
                           <IconComponent />
-                          <AlertTitle>
-                            {displayTitle}
-                          </AlertTitle>
+                          {descriptionNodes.length > 0 && (
+                            <AlertDescription>
+                              {descriptionNodes}
+                            </AlertDescription>
+                          )}
                         </Alert>
                       );
                     },
