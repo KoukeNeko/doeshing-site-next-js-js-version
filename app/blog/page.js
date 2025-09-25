@@ -341,8 +341,8 @@ export default function BlogPage() {
                   transition={{ delay: index * 0.1 }}
                 >
                   <Card className={`bg-zinc-900 border-zinc-800 hover:border-zinc-700 transition-colors p-4 sm:p-6 ${doc.featured ? 'ring-2 ring-yellow-500/20' : ''}`}>
-                    <div className="flex flex-col lg:flex-row lg:items-start gap-4">
-                      <div className="flex-1 min-w-0">
+                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                      <div className="flex-1 min-w-0 lg:max-w-none">
                         <div className="flex flex-wrap items-center gap-2 mb-2">
                           {doc.featured && (
                             <Badge className="bg-yellow-600 text-white text-xs hover:bg-yellow-700">
@@ -367,12 +367,12 @@ export default function BlogPage() {
                             rel="noopener noreferrer"
                             className="flex items-start gap-2 break-words"
                           >
-                            <span className="break-words">{doc.title}</span>
+                            <span className="break-words overflow-wrap-anywhere">{doc.title}</span>
                             <ExternalLink className="h-4 w-4 mt-1 flex-shrink-0" />
                           </a>
                         </h3>
                         
-                        <p className="text-zinc-400 mb-4 line-clamp-3">
+                        <p className="text-zinc-400 mb-4 line-clamp-3 break-words">
                           {doc.description}
                         </p>
                         
@@ -392,10 +392,10 @@ export default function BlogPage() {
                         </div>
                       </div>
 
-                      <div className="lg:ml-4 flex justify-between sm:justify-start sm:gap-4 mt-4 lg:mt-auto w-full">
+                      <div className="lg:flex-shrink-0 lg:w-auto flex flex-col lg:gap-2 gap-4 mt-4 lg:mt-0 w-full lg:w-auto">
                         <a
                           href={`/blog/${doc.configId}`}
-                          className="link-underline link-underline-blue text-sm sm:text-base flex-shrink-0"
+                          className="link-underline link-underline-blue text-sm sm:text-base text-center lg:text-left whitespace-nowrap"
                         >
                           閱讀文章
                         </a>
@@ -403,7 +403,7 @@ export default function BlogPage() {
                           href={doc.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="link-underline link-underline-gray text-sm sm:text-base flex-shrink-0"
+                          className="link-underline link-underline-gray text-sm sm:text-base text-center lg:text-left whitespace-nowrap"
                         >
                           HackMD 原文
                         </a>
