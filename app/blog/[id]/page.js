@@ -18,13 +18,16 @@ import {
   AlertCircle,
   Info,
   CheckCircle2,
-  Lightbulb
+  Lightbulb,
+  XCircle,
+  AlertOctagon
 } from "lucide-react";
 import { getAllDocuments } from "@/config/hackmd-docs";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 const ADMONITION_STYLES = {
+  // 基礎等級 - 藍色系列
   info: {
     title: "資訊",
     borderClass: "border-blue-500",
@@ -39,13 +42,26 @@ const ADMONITION_STYLES = {
     icon: Info,
     iconClass: "text-sky-400"
   },
+  
+  // 輕度警告等級 - 黃色系列
+  caution: {
+    title: "提醒",
+    borderClass: "border-yellow-500",
+    backgroundClass: "bg-yellow-500/15",
+    icon: AlertTriangle,
+    iconClass: "text-yellow-400"
+  },
+  
+  // 中度警告等級 - 橙色系列
   warning: {
     title: "警告",
     borderClass: "border-amber-500",
     backgroundClass: "bg-amber-500/15",
-    icon: AlertTriangle,
+    icon: AlertOctagon,
     iconClass: "text-amber-400"
   },
+  
+  // 高度警告等級 - 紅色系列
   danger: {
     title: "注意",
     borderClass: "border-red-500",
@@ -53,6 +69,17 @@ const ADMONITION_STYLES = {
     icon: AlertCircle,
     iconClass: "text-red-400"
   },
+  
+  // 嚴重警告等級 - 深紅色系列
+  error: {
+    title: "錯誤",
+    borderClass: "border-red-600",
+    backgroundClass: "bg-red-600/15",
+    icon: XCircle,
+    iconClass: "text-red-500"
+  },
+  
+  // 正面回饋等級 - 綠色系列
   success: {
     title: "成功",
     borderClass: "border-emerald-500",
@@ -60,12 +87,23 @@ const ADMONITION_STYLES = {
     icon: CheckCircle2,
     iconClass: "text-emerald-400"
   },
+  
+  // 建議等級 - 紫色系列
   tip: {
     title: "小技巧",
     borderClass: "border-purple-500",
     backgroundClass: "bg-purple-500/15",
     icon: Lightbulb,
     iconClass: "text-purple-400"
+  },
+  
+  // 引用等級 - 灰色系列
+  quote: {
+    title: "引用",
+    borderClass: "border-zinc-500",
+    backgroundClass: "bg-zinc-500/15",
+    icon: Info,
+    iconClass: "text-zinc-400"
   }
 };
 
@@ -657,10 +695,45 @@ export default function BlogDetailPage() {
                       }
 
                       if (!typeKey || !ADMONITION_STYLES[typeKey]) {
+                        // 檢查內容是否包含特定關鍵字來自動分類嚴重程度
+                        const allText = nodeArray.map(node => getNodeText(node)).join(' ').toLowerCase();
+                        
+                        let autoType = 'info'; // 預設類型
+                        let priority = 0; // 優先級，數字越大優先級越高
+                        
+                        // 根據關鍵字和優先級來決定類型
+                        const checks = [
+                          { keywords: ['錯誤', 'error', '失敗', 'fail', '崩潰', 'crash'], type: 'error', priority: 10 },
+                          { keywords: ['危險', 'danger', '嚴重', 'critical', '致命'], type: 'danger', priority: 9 },
+                          { keywords: ['警告', 'warning', '小心', 'caution'], type: 'warning', priority: 8 },
+                          { keywords: ['注意', 'attention', '提醒', 'notice', '留意'], type: 'caution', priority: 7 },
+                          { keywords: ['成功', 'success', '完成', 'complete', '成功', '達成'], type: 'success', priority: 6 },
+                          { keywords: ['技巧', 'tip', '建議', 'suggestion', '訣竅', '妙招'], type: 'tip', priority: 5 },
+                          { keywords: ['引用', 'quote', '摘要', 'summary'], type: 'quote', priority: 4 },
+                          { keywords: ['附註', 'note', '備註', '說明'], type: 'note', priority: 3 }
+                        ];
+                        
+                        for (const check of checks) {
+                          if (check.keywords.some(keyword => allText.includes(keyword)) && check.priority > priority) {
+                            autoType = check.type;
+                            priority = check.priority;
+                          }
+                        }
+                        
+                        console.log('Auto-detected admonition type:', autoType, 'for content:', allText.substring(0, 100));
+                        
+                        const autoStyle = ADMONITION_STYLES[autoType];
+                        const AutoIcon = autoStyle.icon;
+                        
                         return (
-                          <blockquote className="border-l-4 border-blue-500 pl-4 py-2 bg-zinc-800/30 rounded-r mb-4 italic text-zinc-300">
-                            {children}
-                          </blockquote>
+                          <div className={`my-6 rounded-lg border-2 ${autoStyle.borderClass} ${autoStyle.backgroundClass} px-5 py-4 shadow-sm`}>
+                            <div className="flex items-start gap-3">
+                              <AutoIcon className={`h-5 w-5 ${autoStyle.iconClass} flex-shrink-0 mt-0.5`} />
+                              <div className="space-y-3 text-sm leading-relaxed flex-1">
+                                {children}
+                              </div>
+                            </div>
+                          </div>
                         );
                       }
 
