@@ -1,30 +1,171 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import TitleBar from "@/components/layout/TitleBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   ExternalLink,
   RefreshCw,
   FileText,
   Calendar,
   Tag,
-  Copy,
-  Check,
   List,
-  ChevronRight
+  ChevronRight,
+  AlertTriangle,
+  AlertCircle,
+  Info,
+  CheckCircle2,
+  Lightbulb
 } from "lucide-react";
 import { getAllDocuments } from "@/config/hackmd-docs";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+const ADMONITION_STYLES = {
+  info: {
+    title: "資訊",
+    borderClass: "border-blue-500/60",
+    backgroundClass: "bg-blue-500/10",
+    icon: Info,
+    iconClass: "text-blue-300"
+  },
+  note: {
+    title: "附註",
+    borderClass: "border-sky-500/60",
+    backgroundClass: "bg-sky-500/10",
+    icon: Info,
+    iconClass: "text-sky-300"
+  },
+  warning: {
+    title: "警告",
+    borderClass: "border-amber-500/70",
+    backgroundClass: "bg-amber-500/10",
+    icon: AlertTriangle,
+    iconClass: "text-amber-300"
+  },
+  danger: {
+    title: "注意",
+    borderClass: "border-red-500/70",
+    backgroundClass: "bg-red-500/10",
+    icon: AlertCircle,
+    iconClass: "text-red-300"
+  },
+  success: {
+    title: "成功",
+    borderClass: "border-emerald-500/70",
+    backgroundClass: "bg-emerald-500/10",
+    icon: CheckCircle2,
+    iconClass: "text-emerald-300"
+  },
+  tip: {
+    title: "小技巧",
+    borderClass: "border-emerald-500/70",
+    backgroundClass: "bg-emerald-500/10",
+    icon: Lightbulb,
+    iconClass: "text-emerald-200"
+  }
+};
+
+const AVAILABLE_ADMONITIONS = new Set(Object.keys(ADMONITION_STYLES));
+
+const buildAdmonitionBlock = (type, title, bodyLines) => {
+  const typeKey = AVAILABLE_ADMONITIONS.has(type) ? type : 'info';
+  const config = ADMONITION_STYLES[typeKey];
+  const heading = `> [!${typeKey.toUpperCase()}] ${title || config.title}`;
+  const trimmedBody = bodyLines.join('\n').trimEnd();
+  const output = [heading];
+
+  if (trimmedBody.length > 0) {
+    output.push('>');
+    trimmedBody.split(/\r?\n/).forEach((line) => {
+      output.push(`> ${line}`);
+    });
+  }
+
+  output.push('');
+  return output;
+};
+
+const transformHackMdAdmonitions = (content) => {
+  if (!content) return '';
+
+  const lines = content.split(/\r?\n/);
+  const result = [];
+  let inBlock = false;
+  let blockType = '';
+  let blockTitle = '';
+  let blockLines = [];
+
+  const flushBlock = () => {
+    result.push(...buildAdmonitionBlock(blockType, blockTitle, blockLines));
+    inBlock = false;
+    blockType = '';
+    blockTitle = '';
+    blockLines = [];
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (!inBlock) {
+      const startMatch = line.match(/^:::(\w+)\s*(.*)$/);
+      if (startMatch) {
+        blockType = startMatch[1].toLowerCase();
+        const rest = startMatch[2] || '';
+        const inlineMatch = rest.match(/^(.*?)\s*:::\s*$/);
+
+        if (inlineMatch) {
+          blockTitle = inlineMatch[1].trim();
+          blockLines = [];
+          result.push(...buildAdmonitionBlock(blockType, blockTitle, blockLines));
+          inBlock = false;
+          blockType = '';
+          blockTitle = '';
+          blockLines = [];
+        } else {
+          inBlock = true;
+          blockTitle = rest.trim();
+          blockLines = [];
+        }
+      } else {
+        result.push(line);
+      }
+    } else {
+      if (line.trim() === ':::') {
+        flushBlock();
+      } else {
+        blockLines.push(line);
+      }
+    }
+  }
+
+  if (inBlock) {
+    flushBlock();
+  }
+
+  return result.join('\n').trimEnd();
+};
+
+const ADMONITION_MARKER_REGEX = /^\s*\[!(\w+)\]\s*(.*)$/i;
+
+const getNodeText = (node) => {
+  if (typeof node === 'string') return node;
+  if (typeof node === 'number') return node.toString();
+  if (Array.isArray(node)) {
+    return node.map(getNodeText).join('');
+  }
+  if (React.isValidElement(node)) {
+    return getNodeText(node.props.children);
+  }
+  return '';
+};
+
 export default function BlogDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const [isMobile, setIsMobile] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [documentData, setDocumentData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,80 +178,7 @@ export default function BlogDetailPage() {
   const configuredDocs = getAllDocuments();
   const docConfig = configuredDocs.find(doc => doc.id === params.id);
 
-  useEffect(() => {
-    function checkScreenSize() {
-      setIsMobile(window.innerWidth < 1000);
-    }
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-    setInitialized(true);
-    
-    // 無論是否在配置中都嘗試載入文件
-    loadDocument();
-
-    return () => {
-      window.removeEventListener("resize", checkScreenSize);
-    };
-  }, [params.id]);
-
-  const loadDocument = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/hackmd?noteId=${encodeURIComponent(params.id)}`);
-      if (response.ok) {
-        const data = await response.json();
-        // 合併配置信息和 API 返回的內容
-        const doc = {
-          ...data,
-          title: (docConfig?.title) || data.title,
-          description: (docConfig?.description) || data.description,
-          tags: (docConfig?.tags) || data.tags || [],
-          featured: (docConfig?.featured) || false,
-          configId: params.id
-        };
-        
-        setDocumentData(doc);
-        
-        // 生成目錄
-        generateToc(doc.content);
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Failed to fetch document: ${response.statusText}`);
-      }
-    } catch (error) {
-      console.error("Error loading document:", error);
-      setError("載入文件時發生錯誤：" + error.message);
-    }
-    setLoading(false);
-  };
-
-  const generateToc = (content) => {
-    if (!content) return;
-    
-    const lines = content.split('\n');
-    const headings = [];
-    
-    lines.forEach((line, index) => {
-      const match = line.match(/^(#{1,6})\s+(.+)$/);
-      if (match) {
-        const level = match[1].length;
-        const text = match[2].trim();
-        const id = generateHeadingId(text);
-        
-        headings.push({
-          id,
-          text,
-          level,
-          line: index
-        });
-      }
-    });
-    
-    setToc(headings);
-  };
-
-  const generateHeadingId = (children) => {
+  const generateHeadingId = useCallback((children) => {
     // Handle various types of children from ReactMarkdown
     let text = '';
 
@@ -139,7 +207,75 @@ export default function BlogDetailPage() {
       .replace(/^-+|-+$/g, ''); // 移除開頭和結尾的連字符
 
     return id || 'heading'; // 確保至少返回一個有效的ID
-  };
+  }, []);
+
+  const generateToc = useCallback((content) => {
+    if (!content) return;
+
+    const lines = content.split('\n');
+    const headings = [];
+
+    lines.forEach((line, index) => {
+      const match = line.match(/^(#{1,6})\s+(.+)$/);
+      if (match) {
+        const level = match[1].length;
+        const text = match[2].trim();
+        const id = generateHeadingId(text);
+
+        headings.push({
+          id,
+          text,
+          level,
+          line: index
+        });
+      }
+    });
+
+    setToc(headings);
+  }, [generateHeadingId]);
+
+  const loadDocument = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/hackmd?noteId=${encodeURIComponent(params.id)}`);
+      if (response.ok) {
+        const data = await response.json();
+        // 合併配置信息和 API 返回的內容
+        const doc = {
+          ...data,
+          title: (docConfig?.title) || data.title,
+          description: (docConfig?.description) || data.description,
+          tags: (docConfig?.tags) || data.tags || [],
+          featured: (docConfig?.featured) || false,
+          configId: params.id
+        };
+
+        const processedContent = transformHackMdAdmonitions(doc.content);
+        const enrichedDoc = {
+          ...doc,
+          processedContent
+        };
+
+        setDocumentData(enrichedDoc);
+
+        // 生成目錄
+        generateToc(processedContent);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to fetch document: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error loading document:", error);
+      setError("載入文件時發生錯誤：" + error.message);
+    }
+    setLoading(false);
+  }, [docConfig, generateToc, params.id]);
+
+  useEffect(() => {
+    setInitialized(true);
+    loadDocument();
+  }, [loadDocument]);
 
   const scrollToHeading = (id) => {
     try {
@@ -477,11 +613,52 @@ export default function BlogDetailPage() {
                         {children}
                       </pre>
                     ),
-                    blockquote: ({children}) => (
-                      <blockquote className="border-l-4 border-blue-500 pl-4 py-2 bg-zinc-800/30 rounded-r mb-4 italic text-zinc-300">
-                        {children}
-                      </blockquote>
-                    ),
+                    blockquote: ({ children }) => {
+                      const nodeArray = React.Children.toArray(children);
+                      if (nodeArray.length === 0) {
+                        return null;
+                      }
+
+                      let typeKey = null;
+                      let customTitle = '';
+
+                      const firstNode = nodeArray[0];
+                      if (React.isValidElement(firstNode)) {
+                        const firstText = getNodeText(firstNode.props.children);
+                        const markerMatch = firstText.match(ADMONITION_MARKER_REGEX);
+                        if (markerMatch) {
+                          typeKey = markerMatch[1].toLowerCase();
+                          customTitle = markerMatch[2]?.trim() || '';
+                        }
+                      }
+
+                      if (!typeKey || !ADMONITION_STYLES[typeKey]) {
+                        return (
+                          <blockquote className="border-l-4 border-blue-500 pl-4 py-2 bg-zinc-800/30 rounded-r mb-4 italic text-zinc-300">
+                            {children}
+                          </blockquote>
+                        );
+                      }
+
+                      const { borderClass, backgroundClass, icon: IconComponent, iconClass, title } = ADMONITION_STYLES[typeKey];
+                      const contentNodes = nodeArray.slice(1);
+
+                      return (
+                        <div className={`my-6 rounded-lg border ${borderClass} ${backgroundClass} px-4 py-3`}>
+                          <div className="flex items-center gap-2 text-sm font-semibold text-zinc-100">
+                            <IconComponent className={`h-4 w-4 ${iconClass}`} />
+                            <span>{customTitle || title}</span>
+                          </div>
+                          {contentNodes.length > 0 && (
+                            <div className="mt-3 space-y-3 text-sm text-zinc-200">
+                              {contentNodes.map((node, index) => (
+                                <React.Fragment key={index}>{node}</React.Fragment>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    },
                     ul: ({children}) => {
                       if (!children) return null;
                       return (
@@ -569,7 +746,7 @@ export default function BlogDetailPage() {
                     },
                   }}
                 >
-                  {documentData.content}
+                  {documentData.processedContent || documentData.content}
                 </ReactMarkdown>
               </article>
             </Card>

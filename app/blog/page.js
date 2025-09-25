@@ -1,23 +1,25 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import TitleBar from "@/components/layout/TitleBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-
-import { 
-  Calendar, 
-  ExternalLink, 
-  RefreshCw, 
-  FileText, 
+import {
+  Calendar,
+  ExternalLink,
+  RefreshCw,
+  FileText,
   Clock,
-  User,
   Tag,
   Search,
-  Filter,
-  Settings
+  Sparkles,
+  TrendingUp,
+  BarChart3,
+  Lightbulb,
+  X
 } from "lucide-react";
 import { getAllDocuments } from "@/config/hackmd-docs";
 
