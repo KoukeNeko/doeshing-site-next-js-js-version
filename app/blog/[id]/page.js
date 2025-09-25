@@ -6,6 +6,7 @@ import TitleBar from "@/components/layout/TitleBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import {
   ExternalLink,
   RefreshCw,
@@ -26,92 +27,24 @@ import { getAllDocuments } from "@/config/hackmd-docs";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-const ADMONITION_STYLES = {
-  // 基礎等級 - 藍色系列
-  info: {
-    title: "資訊",
-    borderClass: "border-blue-500",
-    backgroundClass: "bg-blue-500/15",
-    icon: Info,
-    iconClass: "text-blue-400"
-  },
-  note: {
-    title: "附註",
-    borderClass: "border-sky-500",
-    backgroundClass: "bg-sky-500/15",
-    icon: Info,
-    iconClass: "text-sky-400"
-  },
-  
-  // 輕度警告等級 - 黃色系列
-  caution: {
-    title: "提醒",
-    borderClass: "border-yellow-500",
-    backgroundClass: "bg-yellow-500/15",
-    icon: AlertTriangle,
-    iconClass: "text-yellow-400"
-  },
-  
-  // 中度警告等級 - 橙色系列
-  warning: {
-    title: "警告",
-    borderClass: "border-amber-500",
-    backgroundClass: "bg-amber-500/15",
-    icon: AlertOctagon,
-    iconClass: "text-amber-400"
-  },
-  
-  // 高度警告等級 - 紅色系列
-  danger: {
-    title: "注意",
-    borderClass: "border-red-500",
-    backgroundClass: "bg-red-500/15",
-    icon: AlertCircle,
-    iconClass: "text-red-400"
-  },
-  
-  // 嚴重警告等級 - 深紅色系列
-  error: {
-    title: "錯誤",
-    borderClass: "border-red-600",
-    backgroundClass: "bg-red-600/15",
-    icon: XCircle,
-    iconClass: "text-red-500"
-  },
-  
-  // 正面回饋等級 - 綠色系列
-  success: {
-    title: "成功",
-    borderClass: "border-emerald-500",
-    backgroundClass: "bg-emerald-500/15",
-    icon: CheckCircle2,
-    iconClass: "text-emerald-400"
-  },
-  
-  // 建議等級 - 紫色系列
-  tip: {
-    title: "小技巧",
-    borderClass: "border-purple-500",
-    backgroundClass: "bg-purple-500/15",
-    icon: Lightbulb,
-    iconClass: "text-purple-400"
-  },
-  
-  // 引用等級 - 灰色系列
-  quote: {
-    title: "引用",
-    borderClass: "border-zinc-500",
-    backgroundClass: "bg-zinc-500/15",
-    icon: Info,
-    iconClass: "text-zinc-400"
-  }
+// Admonition 類型與 Alert variant 的映射
+const ADMONITION_MAPPING = {
+  info: { variant: 'info', icon: Info, title: '資訊' },
+  note: { variant: 'note', icon: Info, title: '附註' },
+  tip: { variant: 'tip', icon: Lightbulb, title: '小技巧' },
+  important: { variant: 'important', icon: AlertCircle, title: '重要' },
+  warning: { variant: 'warning', icon: AlertTriangle, title: '警告' },
+  caution: { variant: 'caution', icon: AlertOctagon, title: '提醒' },
+  danger: { variant: 'danger', icon: AlertCircle, title: '危險' },
+  error: { variant: 'error', icon: XCircle, title: '錯誤' },
+  success: { variant: 'success', icon: CheckCircle2, title: '成功' }
 };
 
-const AVAILABLE_ADMONITIONS = new Set(Object.keys(ADMONITION_STYLES));
+const AVAILABLE_ADMONITIONS = new Set(Object.keys(ADMONITION_MAPPING));
 
 const buildAdmonitionBlock = (type, title, bodyLines) => {
   const typeKey = AVAILABLE_ADMONITIONS.has(type) ? type : 'info';
-  const config = ADMONITION_STYLES[typeKey];
+  const config = ADMONITION_MAPPING[typeKey];
   const heading = `> [!${typeKey.toUpperCase()}] ${title || config.title}`;
   const trimmedBody = bodyLines.join('\n').trimEnd();
   const output = [heading];
@@ -684,6 +617,7 @@ export default function BlogDetailPage() {
                       let typeKey = null;
                       let customTitle = '';
 
+                      // 檢查是否有 admonition 標記
                       const firstNode = nodeArray[0];
                       if (React.isValidElement(firstNode)) {
                         const firstText = getNodeText(firstNode.props.children);
@@ -694,22 +628,21 @@ export default function BlogDetailPage() {
                         }
                       }
 
-                      if (!typeKey || !ADMONITION_STYLES[typeKey]) {
-                        // 檢查內容是否包含特定關鍵字來自動分類嚴重程度
+                      // 如果沒有明確的 admonition 標記，嘗試自動檢測
+                      if (!typeKey || !ADMONITION_MAPPING[typeKey]) {
                         const allText = nodeArray.map(node => getNodeText(node)).join(' ').toLowerCase();
                         
-                        let autoType = 'info'; // 預設類型
-                        let priority = 0; // 優先級，數字越大優先級越高
+                        let autoType = 'info';
+                        let priority = 0;
                         
-                        // 根據關鍵字和優先級來決定類型
                         const checks = [
                           { keywords: ['錯誤', 'error', '失敗', 'fail', '崩潰', 'crash'], type: 'error', priority: 10 },
                           { keywords: ['危險', 'danger', '嚴重', 'critical', '致命'], type: 'danger', priority: 9 },
-                          { keywords: ['警告', 'warning', '小心', 'caution'], type: 'warning', priority: 8 },
+                          { keywords: ['警告', 'warning', '小心'], type: 'warning', priority: 8 },
                           { keywords: ['注意', 'attention', '提醒', 'notice', '留意'], type: 'caution', priority: 7 },
-                          { keywords: ['成功', 'success', '完成', 'complete', '成功', '達成'], type: 'success', priority: 6 },
+                          { keywords: ['成功', 'success', '完成', 'complete', '達成'], type: 'success', priority: 6 },
                           { keywords: ['技巧', 'tip', '建議', 'suggestion', '訣竅', '妙招'], type: 'tip', priority: 5 },
-                          { keywords: ['引用', 'quote', '摘要', 'summary'], type: 'quote', priority: 4 },
+                          { keywords: ['重要', 'important', '關鍵'], type: 'important', priority: 4 },
                           { keywords: ['附註', 'note', '備註', '說明'], type: 'note', priority: 3 }
                         ];
                         
@@ -720,42 +653,27 @@ export default function BlogDetailPage() {
                           }
                         }
                         
+                        typeKey = autoType;
                         console.log('Auto-detected admonition type:', autoType, 'for content:', allText.substring(0, 100));
-                        
-                        const autoStyle = ADMONITION_STYLES[autoType];
-                        const AutoIcon = autoStyle.icon;
-                        
-                        return (
-                          <div className={`my-6 rounded-lg border-2 ${autoStyle.borderClass} ${autoStyle.backgroundClass} px-5 py-4 shadow-sm`}>
-                            <div className="flex items-start gap-3">
-                              <AutoIcon className={`h-5 w-5 ${autoStyle.iconClass} flex-shrink-0 mt-0.5`} />
-                              <div className="space-y-3 text-sm leading-relaxed flex-1">
-                                {children}
-                              </div>
-                            </div>
-                          </div>
-                        );
                       }
 
-                      const { borderClass, backgroundClass, icon: IconComponent, iconClass, title } = ADMONITION_STYLES[typeKey];
+                      const config = ADMONITION_MAPPING[typeKey] || ADMONITION_MAPPING.info;
+                      const IconComponent = config.icon;
                       
-                      // 移除第一行 admonition 標記，只保留其餘內容
-                      const contentNodes = nodeArray.slice(1);
+                      // 如果有 admonition 標記，移除第一行；否則保留所有內容
+                      const contentNodes = (typeKey && customTitle) ? nodeArray.slice(1) : nodeArray;
+
+                      // 將內容轉換為純文字，整合到 AlertTitle 中
+                      const contentText = contentNodes.map(node => getNodeText(node)).join(' ').trim();
+                      const displayTitle = customTitle || contentText || config.title;
 
                       return (
-                        <div className={`my-6 rounded-lg border-2 ${borderClass} ${backgroundClass} px-5 py-4 shadow-sm`}>
-                          <div className="flex items-center gap-3 mb-3">
-                            <IconComponent className={`h-5 w-5 ${iconClass} flex-shrink-0`} />
-                            <span className={`font-medium ${iconClass} text-base`}>{customTitle || title}</span>
-                          </div>
-                          {contentNodes.length > 0 && (
-                            <div className="space-y-3 text-sm leading-relaxed">
-                              {contentNodes.map((node, index) => (
-                                <React.Fragment key={index}>{node}</React.Fragment>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                        <Alert variant={config.variant} className="my-6">
+                          <IconComponent />
+                          <AlertTitle>
+                            {displayTitle}
+                          </AlertTitle>
+                        </Alert>
                       );
                     },
                     ul: ({children}) => {
